@@ -1,0 +1,70 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: #68756d;
+  margin: 0;
+  padding: 0;
+}
+hr {
+  border: none;
+  border-top: 3px solid #394e30;
+  margin: 2rem 0;
+}
+
+.header {
+  background: #394e30;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+category-view,
+plant-view,
+plant-details {
+  display: block;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: rgb(125, 139, 116);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+button {
+  background: #49693b;
+  color: rgb(255, 254, 254);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #588b38;
+}
+
+img {
+  max-width: 100%;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+plant-details {
+  display: block;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: rgb(125, 139, 116);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+plant-details img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+plant-details button:hover {
+  background-color: #588b38;
+  cursor: pointer;
+}
