@@ -1,4 +1,4 @@
-export class categoryView extends HTMLElement {
+export class homeView extends HTMLElement {
   //skal vise kategorier i kategori view
 
   constructor() {
@@ -28,18 +28,18 @@ export class categoryView extends HTMLElement {
     }
   }
 }
-customElements.define("category-view", categoryView);
+customElements.define("category-view", homeView);
 
 //-----------------------------------------------
 
-export class plantView extends HTMLElement {
+export class categoryView extends HTMLElement {
   //skal ta deg videre til plantview
 
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
 
-    this.plantView = document.createElement("div");
+    this.catView = document.createElement("div");
     const linkElem = document.createElement("link");
     linkElem.setAttribute("rel", "stylesheet");
     linkElem.setAttribute("href", "views.css");
@@ -48,12 +48,12 @@ export class plantView extends HTMLElement {
     backBtn.innerText = "Back";
     backBtn.addEventListener("click", this.backClick.bind(this));
 
-    this.shadow.appendChild(this.plantView);
+    this.shadow.appendChild(this.catView);
     this.shadow.appendChild(backBtn);
   }
   //----------------------------------------------
   refresh(dataArr) {
-    this.plantView.innerHTML = ""; // Clear previous content
+    this.catView.innerHTML = ""; // Clear previous content
 
     dataArr.forEach((plant) => {
       const plantCard = document.createElement("div");
@@ -71,7 +71,7 @@ export class plantView extends HTMLElement {
         });
         this.shadow.dispatchEvent(plantDetailsEvent);
       });
-      this.plantView.appendChild(plantCard);
+      this.catView.appendChild(plantCard);
     });
   }
 
@@ -86,7 +86,7 @@ export class plantView extends HTMLElement {
 }
 
 //----------------------------------------------- click funksjon i Kategori som tar deg videre til plantDetail
-export class plantDetails extends HTMLElement {
+export class CandyDetails extends HTMLElement {
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -128,6 +128,6 @@ export class plantDetails extends HTMLElement {
       `;
   }
 }
-customElements.define("plant-details", plantDetails);
+customElements.define("plant-details", CandyDetails);
 
-customElements.define("plant-view", plantView);
+customElements.define("plant-view", categoryView);

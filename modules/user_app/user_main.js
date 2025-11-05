@@ -1,13 +1,13 @@
-import { categoryView, plantDetails, plantView } from "../productView.js";
+import { homeView, CandyDetails, categoryView } from "../productView.js";
 
 const pageContainer = document.getElementById("app");
 
-const catView = new categoryView();
-const plantD = new plantDetails();
-const plantv = new plantView();
+const homeV = new homeView();
+const plantD = new CandyDetails();
+const plantv = new categoryView();
 
 const viewMap = {
-  catView: catView,
+  catView: homeV,
   plantD: plantD,
   plantV: plantv,
 };
@@ -25,7 +25,7 @@ async function loadData() {
     const response = await fetch(catViewURL);
     const data = await response.json();
 
-    catView.refresh(data);
+    homeV.refresh(data);
     console.log(data);
   } catch (error) {
     console.log(error);
