@@ -1,6 +1,11 @@
-import { categoryView, productDetails, productListView } from "../productView.js";
+import {
+  categoryView,
+  productDetails,
+  productListView,
+} from "../productView.js";
 
 const pageContainer = document.getElementById("app");
+const cartButton = document.getElementById("cart-button");
 
 const homePage = new categoryView();
 const catDetails = new productListView();
@@ -12,7 +17,8 @@ const viewMap = {
   candyDetails: candyDetails,
 };
 
-const categoryURL = "https://sukkergris.onrender.com/webshop/categories?key=HJINAS11";
+const categoryURL =
+  "https://sukkergris.onrender.com/webshop/categories?key=HJINAS11";
 
 history.replaceState("homePage", "");
 loadCategories();
@@ -70,7 +76,9 @@ pageContainer.addEventListener("productListBack", function (evt) {
 pageContainer.addEventListener("productSelected", async function (evt) {
   const productId = evt.detail.id;
   try {
-    const response = await fetch(`https://sukkergris.onrender.com/webshop/product?key=HJINAS11&id=${productId}`);
+    const response = await fetch(
+      `https://sukkergris.onrender.com/webshop/product?key=HJINAS11&id=${productId}`
+    );
     const data = await response.json();
     console.log("Product details:", data);
     candyDetails.refresh(data);
@@ -84,4 +92,10 @@ pageContainer.addEventListener("productSelected", async function (evt) {
 
 pageContainer.addEventListener("productDetailsBack", function (evt) {
   navigateTo("catDetails", true);
+});
+
+//-----------------------------------------------
+
+cartButton.addEventListener("click", function () {
+  console.log("Added to cart!");
 });
