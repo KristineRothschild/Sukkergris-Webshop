@@ -1,31 +1,31 @@
-import { categoryView, plantDetails, plantView } from "../productView.js";
+import { categoryView, productDetails, productListView } from "../productView.js";
 
 const pageContainer = document.getElementById("app");
 
-const catView = new categoryView();
-const plantD = new plantDetails();
-const plantv = new plantView();
+const homePage = new categoryView();
+const catDetails = new productListView();
+const candyDetails = new productDetails();
 
 const viewMap = {
-  catView: catView,
-  plantD: plantD,
-  plantV: plantv,
+  homePage: homePage,
+  catDetails: catDetails,
+  candyDetails: candyDetails,
 };
 
-const catViewURL = "https://sukkergris.no/plantcategories/";
+const categoryURL = "https://sukkergris.onrender.com/webshop/categories?key=HJINAS11";
 
-history.replaceState("catView", "");
-loadData();
-navigateTo("catView", false);
+history.replaceState("homePage", "");
+loadCategories();
+navigateTo("homePage", false);
 
 //-----------------------------------------------
 
-async function loadData() {
+async function loadCategories() {
   try {
-    const response = await fetch(catViewURL);
+    const response = await fetch(categoryURL);
     const data = await response.json();
 
-    catView.refresh(data);
+    homePage.refresh(data);
     console.log(data);
   } catch (error) {
     console.log(error);
@@ -42,44 +42,46 @@ function navigateTo(view, push) {
   pageContainer.appendChild(viewMap[view]);
 }
 
-//----------------------------------------------- click funksjon i Kategori som tar deg videre til PlantView
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantSelected", async function (evt) {
-  const category = evt.detail.kategori;
+pageContainer.addEventListener("categorySelected", async function (evt) {
+  const categoryId = evt.detail.id;
   try {
     const response = await fetch(
-      `https://sukkergris.no/plants/?category=${category}`
+      `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&category=${categoryId}`
     );
     const data = await response.json();
-    plantv.refresh(data);
-    navigateTo("plantV", true);
+    console.log("Products:", data);
+    catDetails.refresh(data);
+    navigateTo("catDetails", true);
   } catch (error) {
     console.log(error);
   }
 });
 
-//----------------------------------------------- click funksjon i PlantView som tar deg tilbake til Kategori
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantBack", function (evt) {
-  navigateTo("catView", true);
+pageContainer.addEventListener("productListBack", function (evt) {
+  navigateTo("homePage", true);
 });
 
-//----------------------------------------------- click funksjon i PlantView som tar deg videre til PlantDetails
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantDetails", async function (evt) {
-  const plantId = evt.detail.id;
+pageContainer.addEventListener("productSelected", async function (evt) {
+  const productId = evt.detail.id;
   try {
-    const response = await fetch(`https://sukkergris.no/plant/?id=${plantId}`);
+    const response = await fetch(`https://sukkergris.onrender.com/webshop/product?key=HJINAS11&id=${productId}`);
     const data = await response.json();
-    plantD.refresh(data);
-    navigateTo("plantD", true);
+    console.log("Product details:", data);
+    candyDetails.refresh(data);
+    navigateTo("candyDetails", true);
   } catch (error) {
     console.log(error);
   }
 });
 
-pageContainer.addEventListener("catBack", function (evt) {});
+//-----------------------------------------------
 
-pageContainer.addEventListener("detailsBack", function (evt) {
-  navigateTo("plantV", true);
+pageContainer.addEventListener("productDetailsBack", function (evt) {
+  navigateTo("catDetails", true);
 });
