@@ -1,4 +1,4 @@
-import { categoryView, plantDetails, plantView } from "./view.js";
+import { categoryView, plantDetails, plantView } from "../productView.js";
 
 const pageContainer = document.getElementById("app");
 
