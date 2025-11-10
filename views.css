@@ -93,3 +93,39 @@ plant-details button:hover {
   background-color: #588b38;
   cursor: pointer;
 }
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 320px;
+}
+
+.searchBar input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  background: #ffe5ec;
+  color: #394e30;
+}
+
+.searchBar input[type="text"]::placeholder {
+  font-family: "FontAwesome", "Poppins", sans-serif;
+  color: #788c7c;
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .searchBar {
+    width: 100%;
+  }
+  .searchBar input[type="text"] {
+    width: 100%;
+    border: 1px solid #ffe5ec;
+  }
+}
