@@ -1,15 +1,15 @@
 import {
-  categoryView,
-  productDetails,
-  productListView,
-} from "../productView.js";
+  HomeView,
+  ProductDetailsView,
+  ProductListView,
+} from "./views/index.js";
+import { getProductById } from "../api_service.js";
 
 const pageContainer = document.getElementById("app");
-const cartButton = document.getElementById("cart-button");
 
-const homePage = new categoryView();
-const catDetails = new productListView();
-const candyDetails = new productDetails();
+const homePage = new HomeView();
+const catDetails = new ProductListView();
+const candyDetails = new ProductDetailsView();
 
 const viewMap = {
   homePage: homePage,
@@ -50,20 +50,33 @@ function navigateTo(view, push) {
 
 //-----------------------------------------------
 
-pageContainer.addEventListener("categorySelected", async function (evt) {
-  const categoryId = evt.detail.id;
+pageContainer.addEventListener("categorySelected", function (evt) {
+  handleCategorySelection(evt.detail);
+});
+
+//------------------------------------------------
+
+async function handleCategorySelection(categoryDetail) {
+  const categoryId = resolveCategoryId(categoryDetail);
+  if (!categoryId) {
+    console.warn("Fant ikke kategori-id for:", categoryDetail);
+    return;
+  }
+
   try {
     const response = await fetch(
       `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&category=${categoryId}`
     );
     const data = await response.json();
     console.log("Products:", data);
-    catDetails.refresh(data);
+    catDetails.refresh(data, {
+      emptyMessage: "Ingen produkter i denne kategorien.",
+    });
     navigateTo("catDetails", true);
   } catch (error) {
     console.log(error);
   }
-});
+}
 
 //-----------------------------------------------
 
@@ -76,12 +89,9 @@ pageContainer.addEventListener("productListBack", function (evt) {
 pageContainer.addEventListener("productSelected", async function (evt) {
   const productId = evt.detail.id;
   try {
-    const response = await fetch(
-      `https://sukkergris.onrender.com/webshop/product?key=HJINAS11&id=${productId}`
-    );
-    const data = await response.json();
-    console.log("Product details:", data);
-    candyDetails.refresh(data);
+    const product = await getProductById(productId);
+    console.log("Product details:", product);
+    candyDetails.refresh(product);
     navigateTo("candyDetails", true);
   } catch (error) {
     console.log(error);
@@ -96,6 +106,56 @@ pageContainer.addEventListener("productDetailsBack", function (evt) {
 
 //-----------------------------------------------
 
-cartButton.addEventListener("click", function () {
-  console.log("Added to cart!");
+pageContainer.addEventListener("cartRequested", function () {
+  console.log("Cart requested!");
 });
+
+pageContainer.addEventListener("searchSubmitted", function (evt) {
+  const searchTerm = evt.detail.searchTerm?.trim() ?? "";
+  if (!searchTerm) {
+    catDetails.refresh([], {
+      emptyMessage: "Skriv inn et søkeord for å starte et søk.",
+    });
+    navigateTo("catDetails", true);
+    return;
+  }
+
+  handleSearch(searchTerm);
+});
+
+//------------------------------------------------
+
+function resolveCategoryId(category) {
+  return (
+    category?.id ??
+    category?.category_id ??
+    category?.categoryId ??
+    category?.cat_id ??
+    null
+  );
+}
+
+//------------------------------------------------
+
+async function handleSearch(searchTerm) {
+  try {
+    const searchParam = encodeURIComponent(searchTerm);
+    const response = await fetch(
+      `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&search=${searchParam}`
+    );
+    const data = await response.json();
+    console.log(`Search results for "${searchTerm}":`, data);
+
+    catDetails.refresh(data, {
+      emptyMessage: `Fant ingen produkter for «${searchTerm}».`,
+    });
+    navigateTo("catDetails", true);
+  } catch (error) {
+    console.log(error);
+    catDetails.refresh([], {
+      emptyMessage:
+        "Vi klarte ikke å hente søket akkurat nå. Prøv igjen om litt.",
+    });
+    navigateTo("catDetails", true);
+  }
+}

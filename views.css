@@ -1,131 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Poppins:wght@300;400;500&display=swap");
+
+:root {
+  color-scheme: light;
+}
+
 body {
-  font-family: "Poppins", sans-serif;
-  background: #68756d;
+  font-family: "Playfair Display", serif;
+  background: #f8f5f1;
   margin: 0;
   padding: 0;
+  color: #2c1f18;
 }
+
 hr {
   border: none;
   border-top: 3px solid #394e30;
   margin: 2rem 0;
-}
-
-.header {
-  background: #394e30;
-  color: white;
-  text-align: center;
-  padding: 1rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-}
-
-.header h1 {
-  margin: 0;
-  flex: 1;
-  text-align: center;
-}
-
-.cart-button {
-  background: #49693b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.3s;
-  font-size: 1rem;
-}
-
-.cart-button:hover {
-  background: #588b38;
-}
-
-category-view,
-plant-view,
-plant-details {
-  display: block;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: rgb(125, 139, 116);
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-button {
-  background: #49693b;
-  color: rgb(255, 254, 254);
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-button:hover {
-  background: #588b38;
-}
-
-img {
-  max-width: 100%;
-  border-radius: 3px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-plant-details {
-  display: block;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: rgb(125, 139, 116);
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-plant-details img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-}
-
-plant-details button:hover {
-  background-color: #588b38;
-  cursor: pointer;
-}
-
-.searchBar {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  max-width: 320px;
-}
-
-.searchBar input[type="text"] {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  background: #ffe5ec;
-  color: #394e30;
-}
-
-.searchBar input[type="text"]::placeholder {
-  font-family: "FontAwesome", "Poppins", sans-serif;
-  color: #788c7c;
-}
-
-@media screen and (max-width: 600px) {
-  .header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .searchBar {
-    width: 100%;
-  }
-  .searchBar input[type="text"] {
-    width: 100%;
-    border: 1px solid #ffe5ec;
-  }
 }
