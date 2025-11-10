@@ -6,7 +6,7 @@ const groupkey = "HJINAS11"; // your groupkey here
 
 //--------------------------------------------------------
 export async function getCategories() {
-  const url = `https://sukkergris.onrender.com/webshop/testdummy/categories?key=${groupkey}`;
+  const url = `https://sukkergris.onrender.com/webshop/categories?key=${groupkey}`;
 
   try {
     const data = await sendRequest(url);
@@ -26,7 +26,7 @@ export async function getCategories() {
 
 //--------------------------------------------------------
 export async function getAllProducts() {
-  const url = `https://sukkergris.onrender.com/webshop/testdummy/products?key=${groupkey}`;
+  const url = `https://sukkergris.onrender.com/webshop/products?key=${groupkey}`;
 
   try {
     const data = await sendRequest(url);
@@ -46,7 +46,7 @@ export async function getAllProducts() {
 
 //--------------------------------------------------------
 export async function getProductsByCategory(catId) {
-  const url = `https://sukkergris.onrender.com/webshop/testdummy/products?category_id=${catId}&key=${groupkey}`;
+  const url = `https://sukkergris.onrender.com/webshop/products?category_id=${catId}&key=${groupkey}`;
 
   try {
     const data = await sendRequest(url);
@@ -66,7 +66,7 @@ export async function getProductsByCategory(catId) {
 
 //--------------------------------------------------------
 export async function getProductById(id) {
-  const url = `https://sukkergris.onrender.com/webshop/testdummy/products?id=${id}&key=${groupkey}`;
+  const url = `https://sukkergris.onrender.com/webshop/products?id=${id}&key=${groupkey}`;
 
   try {
     const data = await sendRequest(url);
