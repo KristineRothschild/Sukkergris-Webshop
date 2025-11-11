@@ -8,7 +8,7 @@ import {
   CategoryView,
   ProductForm,
   ProductView,
-} from "./views/admin_product_views.js";
+} from "./views/category-view/admin_product_views.js";
 import { showMessage } from "../msg_handler.js";
 
 //init -------------------------------------------
