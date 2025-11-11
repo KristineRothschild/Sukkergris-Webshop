@@ -59,7 +59,7 @@ pageContainer.addEventListener("categorySelected", function (evt) {
 async function handleCategorySelection(categoryDetail) {
   const categoryId = resolveCategoryId(categoryDetail);
   if (!categoryId) {
-    console.warn("Fant ikke kategori-id for:", categoryDetail);
+    console.warn("Could not find category id for:", categoryDetail);
     return;
   }
 
@@ -70,7 +70,7 @@ async function handleCategorySelection(categoryDetail) {
     const data = await response.json();
     console.log("Products:", data);
     catDetails.refresh(data, {
-      emptyMessage: "Ingen produkter i denne kategorien.",
+      emptyMessage: "No products in this category.",
     });
     navigateTo("catDetails", true);
   } catch (error) {
@@ -114,7 +114,7 @@ pageContainer.addEventListener("searchSubmitted", function (evt) {
   const searchTerm = evt.detail.searchTerm?.trim() ?? "";
   if (!searchTerm) {
     catDetails.refresh([], {
-      emptyMessage: "Skriv inn et søkeord for å starte et søk.",
+      emptyMessage: "Enter a search term to start a search.",
     });
     navigateTo("catDetails", true);
     return;
@@ -147,14 +147,13 @@ async function handleSearch(searchTerm) {
     console.log(`Search results for "${searchTerm}":`, data);
 
     catDetails.refresh(data, {
-      emptyMessage: `Fant ingen produkter for «${searchTerm}».`,
+      emptyMessage: `No products found for «${searchTerm}».`,
     });
     navigateTo("catDetails", true);
   } catch (error) {
     console.log(error);
     catDetails.refresh([], {
-      emptyMessage:
-        "Vi klarte ikke å hente søket akkurat nå. Prøv igjen om litt.",
+      emptyMessage: "Unable to fetch search results. Please try again later.",
     });
     navigateTo("catDetails", true);
   }
