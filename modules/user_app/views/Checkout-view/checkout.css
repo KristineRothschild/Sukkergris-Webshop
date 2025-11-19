@@ -1,0 +1,80 @@
+:root{
+  --accent:#4e4938;
+  --text:#2f2a28;
+  --muted:#6a5b52;
+  --card-bg:#d6cec4;
+  --card-radius:12px;
+}
+
+body,
+#checkout-root {
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+  color: var(--text);
+}
+
+/* container matches other pages */
+#checkout-root{
+  max-width:1200px;
+  margin:20px auto;
+  padding:5rem;
+  box-sizing:border-box;
+}
+
+/* layout */
+.checkout-wrap{
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:12px;
+}
+
+/* card styles using same look as product cards */
+.cart,
+.info{
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding:1.25rem;
+  box-shadow: 0 18px 40px rgba(51, 39, 28, 0.08);
+  border: none;
+}
+
+/* headings */
+.cart h3,
+.info h3 {
+  margin:0 0 8px 0;
+  font-size:1.15rem;
+  color:var(--text);
+}
+
+/* buttons */
+.button-row{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+button{
+  padding:8px 10px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:"Poppins", Arial, Helvetica, sans-serif;
+}
+button.primary{
+  background:var(--accent);
+  color:#fff;
+}
+button.secondary{
+  background:#fdf8f2;
+  color:var(--text);
+  border:1px solid rgba(0,0,0,0.06);
+}
+
+/* small helpers */
+#cart-list div{ padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.04); }
+#msg{ margin-top:8px; color:var(--muted); font-size:0.9rem; }
+
+/* responsive */
+@media (max-width:800px){
+  .checkout-wrap{ grid-template-columns: 1fr; }
+}
+
