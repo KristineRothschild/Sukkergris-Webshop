@@ -92,9 +92,10 @@ class HomeView extends HTMLElement {
   //------------------------------------------------
 
   resolveCategoryName(category) {
-    return (
-      category?.category_name || category?.name || category?.title || "Category"
-    );
+    if (category?.catName) {
+      return category.catName;
+    }
+    return "Category";
   }
 }
 

@@ -41,7 +41,9 @@
 }
 
 .nav-link:hover {
-  color: #c4a2a2;
+  border-color: #fafafa;
+  color: #ffffff;
+  background: #cdb0b0;
 }
 
 .cart-button {
