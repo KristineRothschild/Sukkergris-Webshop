@@ -179,6 +179,12 @@ function deleteProduct(id) { //denne funksjonen sletter eksisterende lokalt prod
 function wireUp() { //denne funksjonen kobler knappar og skjema til funksjonene 
 	$('#addProductBtn').addEventListener('click', () => openModalForAdd());
 	$('#cancelBtn').addEventListener('click', () => closeModal());
+	$('#backBtn').addEventListener('click', () => {
+		document.dispatchEvent(new CustomEvent('edit-product-back', {
+			bubbles: true,
+			composed: true
+		}));
+	});
 
 	//lukker om du trykker utafor innhold
 	$('#productModal').addEventListener('click', (e) => {

@@ -96,6 +96,23 @@ body {
   transform: translateY(-2px);
 }  /* Hover and focus effect for back button */
 
+
+#backBtn {
+  background: #3b2418;
+  color: #f8f1ea;
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.8rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+#backBtn:hover,
+#backBtn:focus-visible {
+  background: #2e1a11;
+  box-shadow: none;
+}
+
 @media screen and (max-width: 600px) {
   .product-list {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
