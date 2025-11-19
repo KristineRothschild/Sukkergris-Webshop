@@ -75,21 +75,25 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #fc86f0;
-  color: #2b241f;
-  border: none;
-  border-radius: 999px;
-  padding: 0.65rem 1.8rem;
+  background: #fdf8f2;
+  border: 1px solid #ded5c9;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  color: #433025;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-  font-size: 1.9rem;
-  letter-spacing: 0.08em;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.85rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  font-weight: 500;
 } /* button styles*/
 
 .back-button:hover,
 .back-button:focus-visible {
-  transform: translateY(-1px);
+  background: #f1e4d7;
+  box-shadow: 0 10px 25px rgba(67, 48, 37, 0.15);
+  transform: translateY(-2px);
 }  /* Hover and focus effect for back button */
 
 @media screen and (max-width: 600px) {
