@@ -4,6 +4,7 @@ import {
   addProduct,
   getProductsByCategory,
 } from "../api_service.js";
+
 import {
   CategoryView,
   ProductForm,
