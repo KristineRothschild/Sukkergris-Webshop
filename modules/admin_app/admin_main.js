@@ -20,27 +20,26 @@ app.appendChild(oversiktView);
 
 app.addEventListener("admin-navigate", async function (evt) {
   const section = evt.detail.section;
-  console.log("Navigerer til:", section);
   
-  // Senere: håndter products, users, orders, comments her
-});
-
-// Gammel kode - beholdes for senere bruk med products
-/*
-const catView = new CategoryView();
-const prodView = new ProductView();
-const prodForm = new ProductForm();
-
-catView.addEventListener("categoryselect", async function (evt) {
-  const categoryId = evt.categoryData.id;
-  const products = await getProductsByCategory(categoryId);
-  prodView.refresh(products);
-});
-
-prodForm.addEventListener("addproduct", async function (evt) {
-  const result = await addProduct(evt.productForm);
-  if (result) {
-    showMessage("Insert OK!");
+  if (section === "products") {
+    try {
+      app.innerHTML = "";
+      
+      const catView = new CategoryView();
+      const categories = await getCategories();
+      console.log("Categories loaded:", categories);
+      catView.refresh(categories);
+      app.appendChild(catView);
+      
+      catView.addEventListener("category-back", function () {
+        app.innerHTML = "";
+        app.appendChild(oversiktView);
+      });
+    } catch (error) {
+      console.error("Error loading categories:", error);
+      showMessage("Feil ved lasting av kategorier");
+    }
   }
+  
+  // Senere: håndter users, orders, comments her
 });
-*/
