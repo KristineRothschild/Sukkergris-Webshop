@@ -1,89 +1,178 @@
-import {categoryView, plantDetails, plantView} from './view.js';
+import {
+  HomeView,
+  ProductDetailsView,
+  ProductListView,
+} from "./views/index.js";
+import { getCategories, getProductById } from "../api_service.js";
 
 const pageContainer = document.getElementById("app");
 
-const catView = new categoryView();
-const plantD = new plantDetails();
-const plantv = new plantView();
+const homePage = new HomeView();
+const catDetails = new ProductListView();
+const candyDetails = new ProductDetailsView();
 
-const viewMap = {    
-    "catView": catView,
-    "plantD": plantD,
-    "plantV": plantv
-}
+const viewMap = {
+  homePage: homePage,
+  catDetails: catDetails,
+  candyDetails: candyDetails,
+};
 
-const catViewURL = "https://sukkergris.no/plantcategories/";
+let cachedCategories = [];
 
-
-
-history.replaceState("catView", ""); 
-loadData();
-navigateTo("catView", false);
+history.replaceState("homePage", "");
+loadCategories();
+navigateTo("homePage", false);
 
 //-----------------------------------------------
 
-async function loadData() {
-     try {
-        const response = await fetch(catViewURL);
-        const data = await response.json();
-
-        catView.refresh(data);
-        console.log(data);
-
-    } catch (error) {
-        console.log(error);
+async function loadCategories() {
+  try {
+    let categories = [];
+    const fetchedCategories = await getCategories();
+    if (Array.isArray(fetchedCategories)) {
+      categories = fetchedCategories;
     }
+
+    cachedCategories = categories;
+
+    homePage.refresh(categories);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //-----------------------------------------------
 
-function navigateTo(view, push){
-    if (push) {
-        history.pushState(view, ""); 
-    }
-    pageContainer.innerHTML = ""; 
-    pageContainer.appendChild(viewMap[view]); 
+function navigateTo(view, push) {
+  if (push) {
+    history.pushState(view, "");
+  }
+  pageContainer.innerHTML = "";
+  pageContainer.appendChild(viewMap[view]);
 }
 
-//----------------------------------------------- click funksjon i Kategori som tar deg videre til PlantView
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantSelected", async function(evt){
-   
-    const category = evt.detail.kategori;
-    try {
-        const response = await fetch(`https://sukkergris.no/plants/?category=${category}`);
-        const data = await response.json();
-        plantv.refresh(data); 
-        navigateTo("plantV", true);
-    } catch (error) {
-        console.log(error);
+pageContainer.addEventListener("categorySelected", function (evt) {
+  handleCategorySelection(evt.detail);
+});
+
+//------------------------------------------------
+
+async function handleCategorySelection(categoryDetail) {
+  const categoryId = resolveCategoryId(categoryDetail);
+  if (!categoryId) {
+    console.warn("Could not find category id for:", categoryDetail);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&category=${categoryId}`
+    );
+    const data = await response.json();
+    console.log("Products:", data);
+    catDetails.refresh(data, {
+      emptyMessage: "No products in this category.",
+    });
+    navigateTo("catDetails", true);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//-----------------------------------------------
+
+pageContainer.addEventListener("productListBack", function (evt) {
+  navigateTo("homePage", true);
+});
+
+//-----------------------------------------------
+
+pageContainer.addEventListener("productSelected", async function (evt) {
+  const productId = evt.detail.id;
+  try {
+    const product = await getProductById(productId);
+    const categoryName = getCategoryNameById(product?.catId);
+    if (categoryName) {
+      product.catName = categoryName;
     }
+    console.log("Product details:", product);
+    candyDetails.refresh(product);
+    navigateTo("candyDetails", true);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-//----------------------------------------------- click funksjon i PlantView som tar deg tilbake til Kategori   
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantBack", function(evt){
-    navigateTo("catView", true);
+pageContainer.addEventListener("productDetailsBack", function (evt) {
+  navigateTo("homePage", true);
 });
 
-//----------------------------------------------- click funksjon i PlantView som tar deg videre til PlantDetails
+//-----------------------------------------------
 
-pageContainer.addEventListener("plantDetails", async function(evt){
-    const plantId = evt.detail.id;
-    try {
-        const response = await fetch(`https://sukkergris.no/plant/?id=${plantId}`);
-        const data = await response.json();
-        plantD.refresh(data); 
-        navigateTo("plantD", true);
-    } catch (error) {
-        console.log(error);
-    }
+pageContainer.addEventListener("cartRequested", function () {
+  console.log("Cart requested!");
 });
 
-pageContainer.addEventListener("catBack", function(evt){
-    
+pageContainer.addEventListener("searchSubmitted", function (evt) {
+  const searchTerm = evt.detail.searchTerm?.trim() ?? "";
+  if (!searchTerm) {
+    catDetails.refresh([], {
+      emptyMessage: "Enter a search term to start a search.",
+    });
+    navigateTo("catDetails", true);
+    return;
+  }
+
+  handleSearch(searchTerm);
 });
 
-pageContainer.addEventListener("detailsBack", function(evt){
-    navigateTo("plantV", true);
-});
+//------------------------------------------------
+
+function resolveCategoryId(category) {
+  return (
+    category?.id ??
+    category?.category_id ??
+    category?.categoryId ??
+    category?.cat_id ??
+    null
+  );
+}
+
+//------------------------------------------------
+
+async function handleSearch(searchTerm) {
+  try {
+    const searchParam = encodeURIComponent(searchTerm);
+    const response = await fetch(
+      `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&search=${searchParam}`
+    );
+    const data = await response.json();
+    console.log(`Search results for "${searchTerm}":`, data);
+
+    catDetails.refresh(data, {
+      emptyMessage: `No products found for «${searchTerm}».`,
+    });
+    navigateTo("catDetails", true);
+  } catch (error) {
+    console.log(error);
+    catDetails.refresh([], {
+      emptyMessage: "Unable to fetch search results. Please try again later.",
+    });
+    navigateTo("catDetails", true);
+  }
+}
+
+//------------------------------------------------
+
+function getCategoryNameById(catId) {
+  if (catId == null) return null;
+  const idToMatch = String(catId);
+  const match = cachedCategories.find(
+    (category) => String(resolveCategoryId(category)) === idToMatch
+  );
+  if (match && match.catName) return match.catName;
+}

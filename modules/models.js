@@ -5,8 +5,15 @@ export class Product {
     this.id = apiData.id;
     this.catId = apiData.category_id;
     this.name = apiData.name;
-    this.descr = apiData.description;
+    this.description = apiData.description;
     this.price = apiData.price;
+    this.image = apiData.image;
+    this.thumb = apiData.thumb;
+    this.heading = apiData.heading;
+    this.discount = apiData.discount;
+    this.stock = apiData.stock;
+    this.rating = apiData.rating;
+    this.expected_shipped = apiData.expected_shipped;
 
     //if needed, add more properties
   }
