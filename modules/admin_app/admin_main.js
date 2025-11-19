@@ -4,12 +4,15 @@ import {
   addProduct,
   getProductsByCategory,
 } from "../api_service.js";
+
 import {
   CategoryView,
   ProductForm,
   ProductView,
 } from "./views/category-view/admin_product_views.js";
 import { showMessage } from "../msg_handler.js";
+
+
 
 //init -------------------------------------------
 const catView = new CategoryView();
