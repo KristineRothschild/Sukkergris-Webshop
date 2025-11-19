@@ -19,12 +19,15 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     // In a real application, you would send these credentials to a server
     // for authentication (e.g., using fetch() or XMLHttpRequest).
     // For this example, we'll use a simple hardcoded check.
-    const validUsername = 'august.gloop@sukkergris.no';
-    const validPassword = 'laffylaffy';
+    const validUsername = 'augustus.gloop@sukkergris.no';
+    const validPassword = 'laffytaffy';
 
     if (username === validUsername && password === validPassword) {
-        alert('Login successful!');
-        // Redirect to a dashboard or another protected page
+        // Dispatch event to notify admin_main.js
+        document.dispatchEvent(new CustomEvent('admin-login-success', {
+            bubbles: true,
+            composed: true
+        }));
     } else {
         alert('Invalid username or password.');
     }
