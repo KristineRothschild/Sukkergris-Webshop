@@ -34,6 +34,11 @@ class ProductListView extends HTMLElement {
     if (backButton) {
       backButton.addEventListener("click", () => this.handleBackClick());
     }
+
+    const cartButton = this.shadow.querySelector("[data-cart-button]");
+    if (cartButton) {
+      cartButton.addEventListener("click", () => this.handleCartClick());
+    }
   }
 
   //------------------------------------------------
@@ -83,6 +88,16 @@ class ProductListView extends HTMLElement {
       bubbles: true,
     });
     this.shadow.dispatchEvent(productListBack);
+  }
+
+  //------------------------------------------------
+
+  handleCartClick() {
+    const cartRequested = new CustomEvent("cartRequested", {
+      composed: true,
+      bubbles: true,
+    });
+    this.shadow.dispatchEvent(cartRequested);
   }
 }
 

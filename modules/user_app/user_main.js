@@ -3,7 +3,7 @@ import {
   ProductDetailsView,
   ProductListView,
 } from "./views/index.js";
-import { getProductById } from "../api_service.js";
+import { getCategories, getProductById } from "../api_service.js";
 
 const pageContainer = document.getElementById("app");
 
@@ -17,8 +17,7 @@ const viewMap = {
   candyDetails: candyDetails,
 };
 
-const categoryURL =
-  "https://sukkergris.onrender.com/webshop/categories?key=HJINAS11";
+let cachedCategories = [];
 
 history.replaceState("homePage", "");
 loadCategories();
@@ -28,11 +27,15 @@ navigateTo("homePage", false);
 
 async function loadCategories() {
   try {
-    const response = await fetch(categoryURL);
-    const data = await response.json();
+    let categories = [];
+    const fetchedCategories = await getCategories();
+    if (Array.isArray(fetchedCategories)) {
+      categories = fetchedCategories;
+    }
 
-    homePage.refresh(data);
-    console.log(data);
+    cachedCategories = categories;
+
+    homePage.refresh(categories);
   } catch (error) {
     console.log(error);
   }
@@ -59,7 +62,7 @@ pageContainer.addEventListener("categorySelected", function (evt) {
 async function handleCategorySelection(categoryDetail) {
   const categoryId = resolveCategoryId(categoryDetail);
   if (!categoryId) {
-    console.warn("Fant ikke kategori-id for:", categoryDetail);
+    console.warn("Could not find category id for:", categoryDetail);
     return;
   }
 
@@ -70,7 +73,7 @@ async function handleCategorySelection(categoryDetail) {
     const data = await response.json();
     console.log("Products:", data);
     catDetails.refresh(data, {
-      emptyMessage: "Ingen produkter i denne kategorien.",
+      emptyMessage: "No products in this category.",
     });
     navigateTo("catDetails", true);
   } catch (error) {
@@ -90,6 +93,10 @@ pageContainer.addEventListener("productSelected", async function (evt) {
   const productId = evt.detail.id;
   try {
     const product = await getProductById(productId);
+    const categoryName = getCategoryNameById(product?.catId);
+    if (categoryName) {
+      product.catName = categoryName;
+    }
     console.log("Product details:", product);
     candyDetails.refresh(product);
     navigateTo("candyDetails", true);
@@ -101,7 +108,7 @@ pageContainer.addEventListener("productSelected", async function (evt) {
 //-----------------------------------------------
 
 pageContainer.addEventListener("productDetailsBack", function (evt) {
-  navigateTo("catDetails", true);
+  navigateTo("homePage", true);
 });
 
 //-----------------------------------------------
@@ -114,7 +121,7 @@ pageContainer.addEventListener("searchSubmitted", function (evt) {
   const searchTerm = evt.detail.searchTerm?.trim() ?? "";
   if (!searchTerm) {
     catDetails.refresh([], {
-      emptyMessage: "Skriv inn et søkeord for å starte et søk.",
+      emptyMessage: "Enter a search term to start a search.",
     });
     navigateTo("catDetails", true);
     return;
@@ -147,15 +154,25 @@ async function handleSearch(searchTerm) {
     console.log(`Search results for "${searchTerm}":`, data);
 
     catDetails.refresh(data, {
-      emptyMessage: `Fant ingen produkter for «${searchTerm}».`,
+      emptyMessage: `No products found for «${searchTerm}».`,
     });
     navigateTo("catDetails", true);
   } catch (error) {
     console.log(error);
     catDetails.refresh([], {
-      emptyMessage:
-        "Vi klarte ikke å hente søket akkurat nå. Prøv igjen om litt.",
+      emptyMessage: "Unable to fetch search results. Please try again later.",
     });
     navigateTo("catDetails", true);
   }
+}
+
+//------------------------------------------------
+
+function getCategoryNameById(catId) {
+  if (catId == null) return null;
+  const idToMatch = String(catId);
+  const match = cachedCategories.find(
+    (category) => String(resolveCategoryId(category)) === idToMatch
+  );
+  if (match && match.catName) return match.catName;
 }

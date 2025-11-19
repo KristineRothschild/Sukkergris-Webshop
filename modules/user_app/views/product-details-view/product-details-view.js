@@ -1,36 +1,25 @@
-const templateURL = new URL("./product-details-view.html", import.meta.url);
-async function loadTemplate(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Klarte ikke å laste template fra ${url}`);
-  }
-  const html = await response.text();
-  const template = document.createElement("template");
-  template.innerHTML = html;
-  return template;
-}
-
-const productDetailsTemplate = await loadTemplate(templateURL);
-const productDetailsStylesURL = new URL(
-  "./product-details-view.css",
-  import.meta.url
-);
+const stylesURL = new URL("./product-details-view.css", import.meta.url);
+const templateHTML = `
+  <link rel="stylesheet" href="${stylesURL.href}">
+  <section class="product-details">
+    <div class="product-details__header">
+      <button class="back-button" type="button" data-back-button>Home</button>
+    </div>
+    <div class="product-details__content" data-product-details></div>
+  </section>
+`;
 
 class ProductDetailsView extends HTMLElement {
   constructor() {
     super();
-    this.shadow = this.attachShadow({ mode: "open" });
-    const fragment = productDetailsTemplate.content.cloneNode(true);
-    const styleLink = document.createElement("link");
-    styleLink.rel = "stylesheet";
-    styleLink.href = productDetailsStylesURL.href;
-    this.shadow.append(styleLink, fragment);
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.innerHTML = templateHTML;
 
-    this.wrapper = this.shadow.querySelector("[data-product-details]");
+    this.wrapper = shadow.querySelector("[data-product-details]");
 
-    const backButton = this.shadow.querySelector("[data-back-button]");
+    const backButton = shadow.querySelector("[data-back-button]");
     if (backButton) {
-      backButton.addEventListener("click", () => this.handleBackClick());
+      backButton.addEventListener("click", () => this.emitBack());
     }
   }
 
@@ -47,32 +36,115 @@ class ProductDetailsView extends HTMLElement {
       return;
     }
 
-    const imageFile = product.image ?? product.thumb ?? "";
-    const imageUrl = imageFile
-      ? `https://sukkergris.onrender.com/images/GFTPOE21/large/${imageFile}`
-      : "";
-    const description = product.description ?? product.descr ?? "-";
+    let imageUrl = "";
+    if (product.image) {
+      imageUrl = `https://sukkergris.onrender.com/images/GFTPOE21/large/${product.image}`;
+    } else if (product.thumb) {
+      imageUrl = `https://sukkergris.onrender.com/images/GFTPOE21/large/${product.thumb}`;
+    }
+    const productName = product.name || "Product";
+    let imageBlock = "";
+    if (imageUrl) {
+      imageBlock = `
+        <div class="product-details__media">
+          <img src="${imageUrl}" alt="${productName}" />
+        </div>
+      `;
+    }
+
+    let priceText = "-";
+    if (product.price || product.price === 0) {
+      priceText = product.price;
+    }
+
+    let availabilityMarkup = "";
+    const stockValue = Number(product.stock || 0);
+    if (stockValue > 0) {
+      availabilityMarkup = `<p class="product-details__stock"><strong>In stock:</strong> ${stockValue}</p>`;
+    } else {
+      let deliveryLabel = "<strong>Estimated delivery:</strong> Not available";
+      const shipDate = product.expected_shipped;
+      if (shipDate) {
+        const shipDateObj = new Date(shipDate);
+        const formattedShipDate = shipDateObj.toLocaleDateString("no-NO");
+        deliveryLabel = `<strong>Estimated delivery:</strong> ${formattedShipDate}`;
+      }
+      availabilityMarkup = `<p class="product-details__stock">${deliveryLabel}</p>`;
+    }
+
+    let ratingMarkup = "";
+    const ratingNumber = Number(product.rating || 0);
+    if (!Number.isNaN(ratingNumber) && ratingNumber > 0) {
+      let clampedRating = Math.round(ratingNumber);
+      if (clampedRating < 1) {
+        clampedRating = 1;
+      }
+      if (clampedRating > 5) {
+        clampedRating = 5;
+      }
+      const filledStars = "★★★★★".slice(0, clampedRating);
+      const emptyStars = "☆☆☆☆☆".slice(clampedRating);
+      const starMarkup = `<span class="product-details__rating-stars">${filledStars}${emptyStars}</span>`;
+      ratingMarkup = `<p class="product-details__rating" aria-label="Rating ${clampedRating} of 5"><strong>Rating:</strong> ${starMarkup}</p>`;
+    }
+
+    const actionsMarkup = `
+      <div class="product-details__actions">
+        <button class="buy-now-button" type="button">
+          Buy this item
+        </button>
+        <button class="buy-now-button" type="button" data-add-to-cart>
+          Go to shopping cart
+        </button>
+      </div>
+    `;
 
     this.wrapper.innerHTML = `
-      ${
-        imageUrl
-          ? `<img src="${imageUrl}" alt="${product.name ?? "Product"}" />`
-          : ""
-      }
-      <h2>${product.name ?? "Product"}</h2>
-      <p><strong>Description:</strong> ${description}</p>
-      <p><strong>Price:</strong> ${product.price ?? "-"} kr</p>
+      ${imageBlock}
+      <h2>${product.name}</h2>
+      <p><strong>Category:</strong> ${product.catName}</p>
+      <p><strong>${product.heading}</strong></p>
+      <p><i>${product.description}</i></p>
+      ${ratingMarkup}
+      <p><strong>Price:</strong> ${priceText} kr</p>
+      ${availabilityMarkup}
+      ${actionsMarkup}
     `;
+
+    const media = this.wrapper.querySelector(".product-details__media");
+    const discountValue = Number(product.discount || 0);
+    if (media && discountValue > 0) {
+      const badge = document.createElement("span");
+      badge.className = "discount-badge";
+      badge.textContent = `-${discountValue}%`;
+      media.appendChild(badge);
+    }
+
+    const addToCartButton = this.wrapper.querySelector("[data-add-to-cart]");
+    if (addToCartButton) {
+      addToCartButton.addEventListener("click", () =>
+        this.emitAddToCart(product)
+      );
+    }
   }
 
   //------------------------------------------------
 
-  handleBackClick() {
+  emitBack() {
     const productDetailsBack = new CustomEvent("productDetailsBack", {
       composed: true,
       bubbles: true,
     });
-    this.shadow.dispatchEvent(productDetailsBack);
+    this.dispatchEvent(productDetailsBack);
+  }
+
+  emitAddToCart(product) {
+    const addToCartEvent = new CustomEvent("addToCart", {
+      composed: true,
+      bubbles: true,
+      detail: { product },
+    });
+    this.dispatchEvent(addToCartEvent);
   }
 }
 

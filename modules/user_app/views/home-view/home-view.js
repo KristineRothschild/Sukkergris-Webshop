@@ -2,7 +2,7 @@ const templateURL = new URL("./home-view.html", import.meta.url);
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Klarte ikke å laste template fra ${url}`);
+    throw new Error(`Could not load template from ${url}`);
   }
   const html = await response.text();
   const template = document.createElement("template");
@@ -36,7 +36,7 @@ class HomeView extends HTMLElement {
 
     if (!Array.isArray(categories) || categories.length === 0) {
       this.categoryGrid.innerHTML =
-        '<p class="empty-state">Ingen kategorier tilgjengelig akkurat nå.</p>';
+        '<p class="empty-state">No categories to show at the moment.</p>';
       return;
     }
 
@@ -92,9 +92,10 @@ class HomeView extends HTMLElement {
   //------------------------------------------------
 
   resolveCategoryName(category) {
-    return (
-      category?.category_name || category?.name || category?.title || "Category"
-    );
+    if (category?.catName) {
+      return category.catName;
+    }
+    return "Category";
   }
 }
 

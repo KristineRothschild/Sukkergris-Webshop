@@ -10,6 +10,10 @@ export class Product {
     this.image = apiData.image;
     this.thumb = apiData.thumb;
     this.heading = apiData.heading;
+    this.discount = apiData.discount;
+    this.stock = apiData.stock;
+    this.rating = apiData.rating;
+    this.expected_shipped = apiData.expected_shipped;
 
     //if needed, add more properties
   }
