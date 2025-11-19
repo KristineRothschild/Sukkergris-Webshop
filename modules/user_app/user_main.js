@@ -3,7 +3,7 @@ import {
   ProductDetailsView,
   ProductListView,
 } from "./views/index.js";
-import { getProductById } from "../api_service.js";
+import { getCategories, getProductById } from "../api_service.js";
 
 const pageContainer = document.getElementById("app");
 
@@ -17,8 +17,7 @@ const viewMap = {
   candyDetails: candyDetails,
 };
 
-const categoryURL =
-  "https://sukkergris.onrender.com/webshop/categories?key=HJINAS11";
+let cachedCategories = [];
 
 history.replaceState("homePage", "");
 loadCategories();
@@ -28,11 +27,15 @@ navigateTo("homePage", false);
 
 async function loadCategories() {
   try {
-    const response = await fetch(categoryURL);
-    const data = await response.json();
+    let categories = [];
+    const fetchedCategories = await getCategories();
+    if (Array.isArray(fetchedCategories)) {
+      categories = fetchedCategories;
+    }
 
-    homePage.refresh(data);
-    console.log(data);
+    cachedCategories = categories;
+
+    homePage.refresh(categories);
   } catch (error) {
     console.log(error);
   }
@@ -90,6 +93,10 @@ pageContainer.addEventListener("productSelected", async function (evt) {
   const productId = evt.detail.id;
   try {
     const product = await getProductById(productId);
+    const categoryName = getCategoryNameById(product?.catId);
+    if (categoryName) {
+      product.catName = categoryName;
+    }
     console.log("Product details:", product);
     candyDetails.refresh(product);
     navigateTo("candyDetails", true);
@@ -101,7 +108,7 @@ pageContainer.addEventListener("productSelected", async function (evt) {
 //-----------------------------------------------
 
 pageContainer.addEventListener("productDetailsBack", function (evt) {
-  navigateTo("catDetails", true);
+  navigateTo("homePage", true);
 });
 
 //-----------------------------------------------
@@ -157,4 +164,15 @@ async function handleSearch(searchTerm) {
     });
     navigateTo("catDetails", true);
   }
+}
+
+//------------------------------------------------
+
+function getCategoryNameById(catId) {
+  if (catId == null) return null;
+  const idToMatch = String(catId);
+  const match = cachedCategories.find(
+    (category) => String(resolveCategoryId(category)) === idToMatch
+  );
+  if (match && match.catName) return match.catName;
 }
