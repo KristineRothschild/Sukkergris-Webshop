@@ -11,6 +11,7 @@ import {
   ProductView,
 } from "./views/category-view/admin_product_views.js";
 import { AdminOverviewView } from "./views/admin-oversikt-view/admin_oversikt.js";
+import { AdminOrdersView } from "./views/admin-orders-view/admin-orders.js";
 import { showMessage } from "../msg_handler.js";
 
 const app = document.getElementById("app");
@@ -128,7 +129,24 @@ app.addEventListener("admin-navigate", async function (evt) {
     }
   }
   
-  // Senere: håndter users, orders, comments her
+  if (section === "orders") {
+    try {
+      app.innerHTML = "";
+      
+      const ordersView = new AdminOrdersView();
+      app.appendChild(ordersView);
+      
+      ordersView.addEventListener("orders-back", function () {
+        app.innerHTML = "";
+        app.appendChild(oversiktView);
+      });
+    } catch (error) {
+      console.error("Error loading orders:", error);
+      showMessage("Feil ved lasting av bestillinger");
+    }
+  }
+  
+  // Senere: håndter users, comments her
 });
 
 // Listen for back from edit product page

@@ -28,8 +28,33 @@ class ConfirmationView extends HTMLElement {
 
   // -----------------------------------------------------
   
+  saveOrderToStorage(orderData) {
+    try {
+      // Get existing orders from localStorage
+      const existingOrders = localStorage.getItem("orders");
+      const orders = existingOrders ? JSON.parse(existingOrders) : [];
+      
+      // Add the new order with timestamp
+      const orderWithDate = {
+        ...orderData,
+        orderDate: new Date().toISOString()
+      };
+      
+      orders.push(orderWithDate);
+      
+      // Save back to localStorage
+      localStorage.setItem("orders", JSON.stringify(orders));
+      console.log("Order saved to localStorage:", orderWithDate);
+    } catch (error) {
+      console.error("Error saving order to localStorage:", error);
+    }
+  }
+  
   displayOrder(orderData) {
     if (!orderData) return;
+
+    // Save order to localStorage for admin view
+    this.saveOrderToStorage(orderData);
 
     // ---------------------------------------------------
 
