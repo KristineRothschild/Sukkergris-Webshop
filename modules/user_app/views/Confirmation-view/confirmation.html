@@ -1,0 +1,77 @@
+<header class="header">
+  <h1 class="brand">Sukkergris</h1>
+  <div class="header-actions">
+    <a class="nav-link" href="#">Home</a>
+    <button class="cart-button" type="button">
+      <span>Cart</span>
+    </button>
+  </div>
+</header>
+
+<section class="confirmation-section">
+  <div class="confirmation-content">
+    <h2 class="confirmation-title">Your order was successful</h2>
+    
+    <div class="order-number">
+      <span class="order-number-label">Order Number:</span>
+      <span class="order-number-value" data-order-number>#000000</span>
+    </div>
+
+    <div class="customer-info-box">
+      <h3 class="section-title">Customer Information</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Name:</span>
+          <span class="info-value" data-customer-name>-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Email:</span>
+          <span class="info-value" data-customer-email>-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Phone:</span>
+          <span class="info-value" data-customer-phone>-</span>
+        </div>
+        <div class="info-item full-width">
+          <span class="info-label">Delivery Address:</span>
+          <span class="info-value" data-customer-address>-</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="receipt-box">
+      <h3 class="receipt-title">Order Summary</h3>
+      <div class="receipt-items" data-receipt-items>
+        <!-- Products will be inserted here -->
+      </div>
+      
+      <div class="shipping-info">
+        <div class="info-row">
+          <span class="info-label">Shipping Method:</span>
+          <span class="info-value" data-shipping-method>-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Estimated Shipping Date:</span>
+          <span class="info-value" data-shipping-date>-</span>
+        </div>
+      </div>
+
+      <div class="price-summary">
+        <div class="price-row">
+          <span class="price-label">Subtotal:</span>
+          <span class="price-value" data-subtotal>0.00 kr</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">Shipping:</span>
+          <span class="price-value" data-shipping-cost>0.00 kr</span>
+        </div>
+        <div class="receipt-total">
+          <span class="total-label">Total:</span>
+          <span class="total-amount" data-total-amount>0.00 kr</span>
+        </div>
+      </div>
+    </div>
+    
+    <p class="thank-you-message">Thank you for your purchase</p>
+  </div>
+</section>

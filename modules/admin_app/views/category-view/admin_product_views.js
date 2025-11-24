@@ -65,7 +65,7 @@ export class CategoryView extends HTMLElement {
     }
   }
   
-  //-----------------------------
+  //-----------------------------------------------
   handleBackClick() {
     const backEvent = new CustomEvent("category-back", {
       composed: true,
