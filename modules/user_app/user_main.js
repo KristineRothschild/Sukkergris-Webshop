@@ -2,6 +2,7 @@ import {
   HomeView,
   ProductDetailsView,
   ProductListView,
+  ShoppingCartView,
 } from "./views/index.js";
 import { getCategories, getProductById } from "../api_service.js";
 
@@ -10,14 +11,19 @@ const pageContainer = document.getElementById("app");
 const homePage = new HomeView();
 const catDetails = new ProductListView();
 const candyDetails = new ProductDetailsView();
+const shoppingCartView = new ShoppingCartView();
 
 const viewMap = {
   homePage: homePage,
   catDetails: catDetails,
   candyDetails: candyDetails,
+  shoppingCart: shoppingCartView,
 };
 
 let cachedCategories = [];
+const cartState = new Map();
+const CART_STORAGE_KEY = "sukkergrisCart";
+restoreCartFromStorage();
 
 history.replaceState("homePage", "");
 loadCategories();
@@ -114,7 +120,52 @@ pageContainer.addEventListener("productDetailsBack", function (evt) {
 //-----------------------------------------------
 
 pageContainer.addEventListener("cartRequested", function () {
-  console.log("Cart requested!");
+  showCartView(true);
+});
+
+pageContainer.addEventListener("addToCart", function (evt) {
+  handleAddToCart(evt.detail?.product);
+});
+
+pageContainer.addEventListener("cartBack", function () {
+  navigateTo("homePage", true);
+});
+
+pageContainer.addEventListener("cartQuantityChanged", function (evt) {
+  const productId = evt.detail?.productId;
+  const quantity = evt.detail?.quantity;
+  if (productId == null) {
+    return;
+  }
+  const productKey = String(productId);
+  const entry = cartState.get(productKey);
+  if (!entry) {
+    return;
+  }
+  const normalized = Math.max(1, Math.floor(Number(quantity) || 1));
+  cartState.set(productKey, {
+    product: entry.product,
+    quantity: normalized,
+  });
+  persistCart();
+  refreshCartView();
+});
+
+pageContainer.addEventListener("cartItemRemoved", function (evt) {
+  const productId = evt.detail?.productId;
+  if (productId == null) {
+    return;
+  }
+  removeProductFromCart(productId);
+});
+
+pageContainer.addEventListener("cartClearRequested", function () {
+  if (cartState.size === 0) {
+    return;
+  }
+  cartState.clear();
+  persistCart();
+  refreshCartView();
 });
 
 pageContainer.addEventListener("searchSubmitted", function (evt) {
@@ -175,4 +226,139 @@ function getCategoryNameById(catId) {
     (category) => String(resolveCategoryId(category)) === idToMatch
   );
   if (match && match.catName) return match.catName;
+}
+
+//------------------------------------------------
+
+function handleAddToCart(product) {
+  if (!product) {
+    return;
+  }
+  addProductToCart(product);
+  showCartView(true);
+}
+
+//------------------------------------------------
+
+function addProductToCart(product) {
+  const productId = resolveProductId(product);
+  if (!productId) {
+    return;
+  }
+  const productKey = String(productId);
+  const existingEntry = cartState.get(productKey);
+  if (existingEntry) {
+    cartState.set(productKey, {
+      product: { ...existingEntry.product, ...product },
+      quantity: existingEntry.quantity + 1,
+    });
+  } else {
+    cartState.set(productKey, {
+      product,
+      quantity: 1,
+    });
+  }
+  persistCart();
+}
+
+//------------------------------------------------
+
+function removeProductFromCart(productId) {
+  const productKey = String(productId);
+  if (!cartState.has(productKey)) {
+    return;
+  }
+  cartState.delete(productKey);
+  persistCart();
+  refreshCartView();
+}
+
+//------------------------------------------------
+
+function showCartView(push) {
+  refreshCartView();
+  navigateTo("shoppingCart", push);
+}
+
+//------------------------------------------------
+
+function refreshCartView() {
+  const cartItems = collectCartItems();
+  shoppingCartView.refresh(cartItems);
+}
+
+//------------------------------------------------
+
+function collectCartItems() {
+  return Array.from(cartState.entries()).map(
+    ([productKey, { product, quantity }]) => ({
+      productNumber: productKey,
+      name: product?.name ?? "Produkt",
+      quantity: quantity ?? 0,
+      price: resolvePrice(product?.price),
+      stock: resolveStock(product?.stock),
+      expectedShipping: resolveExpectedShipping(product),
+    })
+  );
+}
+
+//------------------------------------------------
+
+function persistCart() {
+  localStorage.setItem(
+    CART_STORAGE_KEY,
+    JSON.stringify([...cartState.entries()])
+  );
+}
+
+//------------------------------------------------
+
+function restoreCartFromStorage() {
+  const raw = localStorage.getItem(CART_STORAGE_KEY);
+  if (!raw) return;
+  JSON.parse(raw).forEach(([key, entry]) => cartState.set(key, entry));
+  refreshCartView();
+}
+
+//------------------------------------------------
+
+function resolveProductId(product) {
+  return (
+    product?.id ??
+    product?.productNumber ??
+    product?.product_id ??
+    product?.productId ??
+    null
+  );
+}
+
+//------------------------------------------------
+
+function resolvePrice(value) {
+  const numericValue = Number(value);
+  if (Number.isFinite(numericValue)) {
+    return numericValue;
+  }
+  return 0;
+}
+
+//------------------------------------------------
+
+function resolveStock(value) {
+  const numericValue = Number(value);
+  if (Number.isFinite(numericValue)) {
+    return numericValue;
+  }
+  return 0;
+}
+
+//------------------------------------------------
+
+function resolveExpectedShipping(product) {
+  return (
+    product?.expected_shipped ??
+    product?.expectedShipped ??
+    product?.expected_shipping ??
+    null
+  );
 }

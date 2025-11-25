@@ -90,10 +90,10 @@ class ProductDetailsView extends HTMLElement {
 
     const actionsMarkup = `
       <div class="product-details__actions">
-        <button class="buy-now-button" type="button">
+        <button class="buy-now-button" type="button" data-add-to-cart>
           Buy this item
         </button>
-        <button class="buy-now-button" type="button" data-add-to-cart>
+        <button class="buy-now-button" type="button" data-go-to-cart>
           Go to shopping cart
         </button>
       </div>
@@ -126,6 +126,11 @@ class ProductDetailsView extends HTMLElement {
         this.emitAddToCart(product)
       );
     }
+
+    const goToCartButton = this.wrapper.querySelector("[data-go-to-cart]");
+    if (goToCartButton) {
+      goToCartButton.addEventListener("click", () => this.emitCartRequested());
+    }
   }
 
   //------------------------------------------------
@@ -145,6 +150,14 @@ class ProductDetailsView extends HTMLElement {
       detail: { product },
     });
     this.dispatchEvent(addToCartEvent);
+  }
+
+  emitCartRequested() {
+    const cartRequested = new CustomEvent("cartRequested", {
+      composed: true,
+      bubbles: true,
+    });
+    this.dispatchEvent(cartRequested);
   }
 }
 
