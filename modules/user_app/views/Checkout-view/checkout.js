@@ -1,4 +1,3 @@
-
 const SHIPPING_API_URL = ''; // finn api for shipping her
 
 // Simple sample shipping methods used if no API URL is provided
@@ -54,7 +53,7 @@ function updateTotals(){
 
 function init(){
 	// set a simple subtotal placeholder (in real app you'll compute cart total)
-	$('#subtotal').textContent = format(245.00); //her setter vi inn subtotalen for produktene senere
+	$('#subtotal').textContent = format(0.00); //her setter vi inn subtotalen for produktene senere
 
 	fetchShipping().then(methods => {
 		$('#shippingLoading').style.display = 'none';
@@ -100,6 +99,24 @@ function init(){
 
 	// initial totals
 	updateTotals();
+
+	// Load and display cart items
+	const cartData = localStorage.getItem('sukkergrisCart');
+	if (cartData) {
+		try {
+			const cart = JSON.parse(cartData);
+			const list = $('#orderList');
+			let subtotalAmount = 0;
+			list.innerHTML = cart.map(([key, {product, quantity}]) => {
+				const itemTotal = (Number(product?.price) || 0) * quantity;
+				subtotalAmount += itemTotal;
+				return `<li>${quantity}x ${product?.name || 'Product'} = ${format(itemTotal)} kr</li>`;
+			}).join('');
+			$('#subtotal').textContent = format(subtotalAmount);
+		} catch(e) {
+			console.warn('Could not load cart', e);
+		}
+	}
 }
 
 document.addEventListener('DOMContentLoaded', init);
