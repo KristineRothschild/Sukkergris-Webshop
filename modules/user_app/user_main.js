@@ -123,6 +123,10 @@ pageContainer.addEventListener("cartRequested", function () {
   showCartView(true);
 });
 
+pageContainer.addEventListener("checkoutRequested", function () {
+  window.location.href = "./modules/user_app/views/Checkout-view/checkout.html";
+});
+
 pageContainer.addEventListener("addToCart", function (evt) {
   handleAddToCart(evt.detail?.product);
 });

@@ -125,6 +125,11 @@ class ShoppingCartView extends HTMLElement {
     checkoutButton.type = "button";
     checkoutButton.className = "cart-checkout-button";
     checkoutButton.textContent = "Proceed to checkout";
+    checkoutButton.addEventListener("click", () =>
+      this.dispatchEvent(
+        new CustomEvent("checkoutRequested", { composed: true, bubbles: true })
+      )
+    );
     summaryColumn.appendChild(checkoutButton);
 
     layout.append(itemsColumn, summaryColumn);
