@@ -1,118 +1,22 @@
-:root{
-  --bg:#f8f5f1;
-  --card-bg:#ffffff;
-  --panel-bg:#e9e2da;
-  --accent:#3b2418;
-  --muted:#6a5b52;
-  --text:#1f1f1f;
-  --radius:12px;
-  --max-width:1200px;
-}
+/* Simple checkout styles - minimal and easy to edit */
+:root{--max-width:900px;--gap:12px}
 
-/* page background and base fonts (inspired by product pages) */
-body,
-#checkout-root {
-  background: var(--bg);
-  font-family: "Poppins", Arial, Helvetica, sans-serif;
-  color: var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
+body{font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin:0;padding:24px;background:#d8d4cd}
 
-/* container to match other pages */
-#checkout-root{
-  max-width: var(--max-width);
-  margin: 24px auto;
-  padding: 2rem;
-  box-sizing: border-box;
-}
+.checkout{max-width:var(--max-width);margin:0 auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
 
-/* layout: two columns, responsive */
-.checkout-wrap{
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 20px;
-}
+h1{margin:0 0 12px;font-size:3rem}
 
-/* panels use same elevated card style as product cards */
-.cart, .info {
-  background: var(--card-bg);
-  border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(51, 39, 28, 0.08);
-  padding: 1.25rem;
-  border: none;
-}
+.step{margin:16px 0;padding:8px 0;border-bottom:1px solid #eee}
 
-/* headings: use Playfair-like feel for large titles */
-.cart h3,
-.info h3 {
-  margin: 0 0 12px 0;
-  font-family: "Playfair Display", serif;
-  font-size: 1.25rem;
-  color: #342720;
-}
+label{display:block;margin:8px 0;font-size:0.95rem}
 
-/* cart item list style */
-#cart-list > div {
-  display:flex;
-  justify-content:space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
-  color: var(--muted);
-  font-family: "Poppins", sans-serif;
-}
+input[type=text],input[type=email]{width:98%;padding:8px;border:1px solid #b3b3b3;border-radius:6px}
 
-/* subtotal / totals */
-.totals {
-  margin-top: 12px;
-  font-weight: 700;
-  color: #342720;
-}
-
-/* inputs in info panel align with page typography */
-.info input[type="text"],
-.info input[type="email"],
-.info textarea {
-  width: 100%;
-  padding: 8px 10px;
-  margin-top: 6px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #efe7de;
-  font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
-}
-
-/* buttons styled like back/edit buttons but adapted */
-.button-row{
-  display:flex;
-  gap:10px;
-  justify-content:flex-end;
-  margin-top:10px;
-}
-button {
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-family: "Poppins", sans-serif;
-}
-button.primary {
-  background: var(--accent);
-  color: #f8f1ea;
-}
-button.secondary {
-  background: #fdf8f2;
-  color: var(--text);
-  border: 1px solid #ded5c9;
-}
-
-/* small helper message */
-#msg { margin-top:8px; color:var(--muted); font-size:0.95rem; }
-
-/* responsive: single column on small screens */
-@media (max-width: 800px) {
-  .checkout-wrap{ grid-template-columns: 1fr; padding: 0; }
-  #checkout-root { padding: 1rem; }
-}
-
+.shipping-list{list-style:none;padding:0;margin:8px 0}
+.shipping-list li{padding:8px;border:1px solid #eee;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.summary{background:#fafafa;padding:10px;border-radius:6px}
+.total{margin-top:8px;font-size:1.5rem}
+#placeOrderBtn{background:#92795b;color:#fff;border:none;padding:15px 14px;border-radius:6px;cursor:pointer}
+#placeOrderBtn:active{transform:translateY(1px)}
+.small-muted{font-size:0.85rem;color:#777}

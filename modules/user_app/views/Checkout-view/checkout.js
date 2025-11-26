@@ -1,73 +1,106 @@
 
-document.addEventListener('DOMContentLoaded', init);
+const SHIPPING_API_URL = ''; // finn api for shipping her
+
+// Simple sample shipping methods used if no API URL is provided
+const SAMPLE_SHIPPING = [
+	{ id: 'standard', name: 'Standard (3-5 days)', price: 39.0 },
+	{ id: 'express', name: 'Express (1-2 days)', price: 79.0 },
+	{ id: 'pickup', name: 'Pickup (store)', price: 0.0 } //vi trenger shipping api her -dette er bare eksempeldata
+];
+
+function $(sel){ return document.querySelector(sel); } //denne funksjonen henter elementer frå DOM - som betyr at du kan bruke den til å hente elementer frå HTML-dokumentet ved hjelp av CSS-selektorar.
+
+function format(n){ return Number(n || 0).toFixed(2); } //denne funksjonen formaterer tal
+
+function renderShippingList(methods){
+	const list = $('#shippingList');
+	// Build simple HTML for radios — shorter and still vanilla
+	list.innerHTML = methods.map(m =>
+		`<li><input type="radio" name="shipping" value="${m.id}" data-price="${m.price}">` +
+		`<label style="flex:1">${m.name} — ${format(m.price)} kr</label></li>`
+	).join('');
+	// Single event listener for changes (delegation)
+	list.addEventListener('change', updateTotals);
+}
+
+async function fetchShipping(){
+	if (!SHIPPING_API_URL) {
+		return SAMPLE_SHIPPING;
+	}
+	try{
+		const res = await fetch(SHIPPING_API_URL);
+		if (!res.ok) throw new Error('Network');
+		const data = await res.json();
+		// expect array of { id, name, price }
+		return data;
+	}catch(e){
+		console.warn('Failed to fetch shipping, using sample', e);
+		return SAMPLE_SHIPPING;
+	}
+}
+
+function selectedShipping(){
+	const radio = document.querySelector('input[name="shipping"]:checked');
+	if (!radio) return { id: null, price: 0 };
+	return { id: radio.value, price: Number(radio.dataset.price) || 0 };
+}
+
+function updateTotals(){
+	const subtotal = Number($('#subtotal').textContent) || 0;
+	const ship = selectedShipping().price || 0;
+	$('#shippingCost').textContent = format(ship);
+	$('#total').textContent = format(subtotal + ship);
+}
 
 function init(){
-  const root = document.getElementById('checkout-root');
-  root.innerHTML = template();
-  renderCart();
-  bind();
+	// set a simple subtotal placeholder (in real app you'll compute cart total)
+	$('#subtotal').textContent = format(245.00); //her setter vi inn subtotalen for produktene senere
+
+	fetchShipping().then(methods => {
+		$('#shippingLoading').style.display = 'none';
+		renderShippingList(methods);
+	});
+
+	// when place order clicked: gather data and redirect (placeholder)
+	$('#placeOrderBtn').addEventListener('click', (e) => {
+		// gather customer info
+		const order = {
+			customer: {
+				name: $('#name').value,
+				email: $('#email').value,
+				address: $('#address').value,
+				city: $('#city').value,
+				zip: $('#zip').value
+			},
+			shipping: selectedShipping(),
+			subtotal: Number($('#subtotal').textContent) || 0,
+			total: Number($('#total').textContent) || 0
+		};
+
+		// Basic validation: require name and email and a shipping method
+		if (!order.customer.name || !order.customer.email) {
+			alert('Please enter name and email.');
+			return;
+		}
+		if (!order.shipping.id){
+			alert('Please choose a shipping method.');
+			return;
+		}
+
+		// Here you would POST `order` to your server and handle response.
+		// For now we just save to localStorage and redirect to a placeholder page.
+		localStorage.setItem('lastOrder', JSON.stringify(order));
+
+		// Redirect to an order confirmation page (change as needed)
+		window.location.href = 'order-confirmation.html';
+	});
+
+	// update totals when user changes any input that might affect total
+	document.addEventListener('change', updateTotals);
+
+	// initial totals
+	updateTotals();
 }
 
-// minimal DOM
-function template(){
-  return `
-    <div class="checkout-wrap">
-      <section class="cart">
-        <h3>Cart</h3>
-        <div id="cart-list">Loading…</div>
-      </section>
-      <aside class="info">
-        <h3>Customer info</h3>
-        <input id="name" placeholder="Name"/>
-        <br/><br/>
-        <input id="email" placeholder="Email" />
-          <br/><br/>
-        <input id="address" placeholder="Address" />
-        <div class="button-row">
-          <button id="btn-home">Home</button>
-          <button id="btn-place" class="primary">Place order</button>
-        </div>
-        <div id="msg" style="margin-top:8px;color:#666;font-size:0.9rem"></div>
-      </aside>
-    </div>
-  `;
-}
+document.addEventListener('DOMContentLoaded', init);
 
-// render cart from localStorage or demo
-function getCart(){
-  try{
-    const raw = localStorage.getItem('cart');
-    if(raw) return JSON.parse(raw);
-  }catch(e){}
-  return [{ id:347,name:'Banana Bug Bonanza',price:32,quantity:2 }];
-}
-
-function renderCart(){ // henter alle varer i handlekurven og viser dem her
-  const list = getCart();
-  const el = document.getElementById('cart-list');
-  if(!list || !list.length){ el.textContent = 'Cart is empty'; return; }
-  el.innerHTML = list.map(i=>`<div style="display:flex;justify-content:space-between;padding:6px 0">
-    <div>${escape(i.name)} x ${i.quantity}</div><div>${(i.price*i.quantity).toFixed(0)} kr</div></div>`).join('');
-  const subtotal = list.reduce((s,i)=>s+i.price*i.quantity,0);
-  el.insertAdjacentHTML('beforeend', `<div style="font-weight:700;margin-top:8px">Subtotal: ${subtotal.toFixed(0)} kr</div>`);
-}
-
-function bind(){ // bind buttons
-  document.getElementById('btn-home').addEventListener('click', ()=>document.dispatchEvent(new CustomEvent('navigate-home',{bubbles:true,composed:true})));
-  document.getElementById('btn-place').addEventListener('click', placeOrder);
-}
-
-function placeOrder(){
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const address = document.getElementById('address').value.trim();
-  if(!name||!email||!address){ showMsg('Please fill name, email and address.'); return; }
-  const payload = { customer:{name,email,address}, items:getCart() };
-  // TODO: replace with real API POST to create order
-  console.log('PLACE ORDER (mock):', payload);
-  showMsg('Order placed (mock).');
-  document.dispatchEvent(new CustomEvent('order-placed',{detail:payload,bubbles:true,composed:true}));
-}
-
-function showMsg(txt){ const m = document.getElementById('msg'); if(m) m.textContent = txt; }
-function escape(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
