@@ -90,8 +90,9 @@ function init(){
 		// For now we just save to localStorage and redirect to a placeholder page.
 		localStorage.setItem('lastOrder', JSON.stringify(order));
 
-		// Redirect to an order confirmation page (change as needed)
-		window.location.href = 'order-confirmation.html';
+		// Redirect to the order confirmation view in this project
+		// confirmation.html lives in ../Confirmation-view/confirmation.html
+		window.location.href = '../Confirmation-view/confirmation.html';
 	});
 
 	// update totals when user changes any input that might affect total
