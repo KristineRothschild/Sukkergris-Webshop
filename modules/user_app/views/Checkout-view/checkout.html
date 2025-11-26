@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
         <title>Checkout</title>
         <link rel="stylesheet" href="checkout.css">
     </head>
@@ -12,7 +13,7 @@
 
             <!-- Step 1: Customer info -->
             <section id="step1" class="step">
-                <h2>1 — Customer information</h2>
+                <h2>Customer information</h2>
                 <form id="customerForm">
                     <label>
                         Full name
@@ -43,16 +44,22 @@
 
             <!-- Step 2: Shipping -->
             <section id="step2" class="step">
-                <h2>2 — Shipping method</h2>
+                <h2>Shipping method</h2>
                 <div id="shippingArea">
                     <p id="shippingLoading">Loading shipping methods…</p>
                     <ul id="shippingList" class="shipping-list" aria-live="polite"></ul>
                 </div>
             </section>
 
+            <!-- Step 2b: Order items -->
+            <section id="step2b" class="step">
+                <h2>Order items</h2>
+                <ul id="orderList" class="order-list"></ul>
+            </section>
+
             <!-- Step 3: Summary -->
             <section id="step3" class="step">
-                <h2>3 — Summary</h2>
+                <h2>Summary</h2>
                 <div class="summary">
                     <div>Subtotal: <span id="subtotal">0.00</span> kr</div>
                     <div>Shipping: <span id="shippingCost">0.00</span> kr</div>
