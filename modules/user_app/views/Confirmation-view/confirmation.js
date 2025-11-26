@@ -1,5 +1,7 @@
 const templateURL = new URL("./confirmation.html", import.meta.url);
 
+import { addOrder } from "../../../api_service.js";
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -28,33 +30,32 @@ class ConfirmationView extends HTMLElement {
 
   // -----------------------------------------------------
   
-  saveOrderToStorage(orderData) {
+  async saveOrderToAPI(orderData) {
     try {
-      // Get existing orders from localStorage
-      const existingOrders = localStorage.getItem("orders");
-      const orders = existingOrders ? JSON.parse(existingOrders) : [];
-      
-      // Add the new order with timestamp
-      const orderWithDate = {
-        ...orderData,
-        orderDate: new Date().toISOString()
+      const apiOrderData = {
+        customer_name: orderData.customer?.name || "Unknown",
+        street: orderData.customer?.address?.split(",")[0] || "Unknown Street",
+        city: orderData.customer?.city || "Unknown City",
+        zipcode: orderData.customer?.zipcode || "0000",
+        country: orderData.customer?.country || "Norway",
+        shipping_id: orderData.shippingId || 3,
+        content: JSON.stringify(orderData.items || []),
+        email: orderData.customer?.email || "",
+        phone: orderData.customer?.phone || ""
       };
-      
-      orders.push(orderWithDate);
-      
-      // Save back to localStorage
-      localStorage.setItem("orders", JSON.stringify(orders));
-      console.log("Order saved to localStorage:", orderWithDate);
+
+      const result = await addOrder(apiOrderData);
+      console.log("Order saved to API:", result);
+      return result;
     } catch (error) {
-      console.error("Error saving order to localStorage:", error);
+      console.error("Error saving order to API:", error);
     }
   }
   
-  displayOrder(orderData) {
+  async displayOrder(orderData) {
     if (!orderData) return;
 
-    // Save order to localStorage for admin view
-    this.saveOrderToStorage(orderData);
+    await this.saveOrderToAPI(orderData);
 
     // ---------------------------------------------------
 

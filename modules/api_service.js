@@ -99,4 +99,68 @@ export async function addProduct(product) {
 
 //---------------------------------------------------------
 
-//add more functions below when needed
+export async function getOrders() {
+  const url = `https://sukkergris.onrender.com/webshop/orders?key=${groupkey}`;
+  const token = sessionStorage.getItem("token");
+
+  const cfg = {
+    method: "GET",
+    headers: {
+      "authorization": token
+    }
+  };
+
+  try {
+    const data = await sendRequest(url, cfg);
+    return data;
+  } catch (error) {
+    errorHandler(error);
+  }
+}
+
+//---------------------------------------------------------
+
+export async function addOrder(orderData) {
+  const url = `https://sukkergris.onrender.com/webshop/orders?key=${groupkey}`;
+  const token = sessionStorage.getItem("token");
+
+  const cfg = {
+    method: "POST",
+    headers: {
+      "authorization": token || "",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(orderData)
+  };
+
+  try {
+    const data = await sendRequest(url, cfg);
+    return data;
+  } catch (error) {
+    errorHandler(error);
+  }
+}
+
+//---------------------------------------------------------
+
+export async function deleteOrder(orderId) {
+  const url = `https://sukkergris.onrender.com/webshop/orders?key=${groupkey}&id=${orderId}`;
+  const token = sessionStorage.getItem("token");
+
+  const cfg = {
+    method: "DELETE",
+    headers: {
+      "authorization": token
+    }
+  };
+
+  try {
+    const data = await sendRequest(url, cfg);
+    return data;
+  } catch (error) {
+    errorHandler(error);
+  }
+}
+
+//---------------------------------------------------------
+

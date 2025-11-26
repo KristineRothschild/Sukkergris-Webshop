@@ -1,5 +1,8 @@
 const templateURL = new URL("./admin-orders.html", import.meta.url);
 
+import { getOrders, deleteOrder } from "../../../api_service.js";
+import { showMessage } from "../../../msg_handler.js";
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -51,30 +54,21 @@ class AdminOrdersView extends HTMLElement {
 
   // ----------------------------------------------------------------
 
-  loadOrders() {
-    const orders = this.getOrdersFromStorage();
-    this.displayOrders(orders);
-  }
-
-  // ----------------------------------------------------------------
-
-  getOrdersFromStorage() {
+  async loadOrders() {
     try {
-      const ordersData = localStorage.getItem("orders");
-      return ordersData ? JSON.parse(ordersData) : [];
+      const orders = await getOrders();
+      this.displayOrders(orders || []);
     } catch (error) {
-      console.error("Error loading orders from localStorage:", error);
-      return [];
+      console.error("Error loading orders:", error);
+      this.showError("Failed to load orders. Please try again.");
     }
   }
 
   // ----------------------------------------------------------------
 
-  saveOrdersToStorage(orders) {
-    try {
-      localStorage.setItem("orders", JSON.stringify(orders));
-    } catch (error) {
-      console.error("Error saving orders to localStorage:", error);
+  showError(message) {
+    if (this.ordersList) {
+      this.ordersList.innerHTML = `<p class="empty-state">${message}</p>`;
     }
   }
 
@@ -89,7 +83,7 @@ class AdminOrdersView extends HTMLElement {
 
     this.ordersList.innerHTML = "";
 
-    if (orders.length === 0) {
+    if (!orders || orders.length === 0) {
       const emptyState = document.createElement("p");
       emptyState.className = "empty-state";
       emptyState.textContent = "No orders yet";
@@ -98,7 +92,7 @@ class AdminOrdersView extends HTMLElement {
     }
 
     const sortedOrders = [...orders].sort((a, b) => {
-      return new Date(b.orderDate || 0) - new Date(a.orderDate || 0);
+      return new Date(b.date || 0) - new Date(a.date || 0);
     });
 
     sortedOrders.forEach((order) => {
@@ -121,12 +115,12 @@ class AdminOrdersView extends HTMLElement {
 
     const orderNumber = document.createElement("h3");
     orderNumber.className = "order-number";
-    orderNumber.textContent = `Order #${order.orderNumber || "N/A"}`;
+    orderNumber.textContent = `Order #${order.order_number || order.id || "N/A"}`;
 
     const orderDate = document.createElement("p");
     orderDate.className = "order-date";
-    orderDate.textContent = order.orderDate
-      ? new Date(order.orderDate).toLocaleString("no-NO")
+    orderDate.textContent = order.date
+      ? new Date(order.date).toLocaleString("no-NO")
       : "Date not available";
 
     orderInfo.appendChild(orderNumber);
@@ -138,36 +132,41 @@ class AdminOrdersView extends HTMLElement {
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "delete-button";
     deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener("click", () => this.deleteOrder(order.orderNumber));
+    deleteBtn.addEventListener("click", () => this.deleteOrderHandler(order.id));
 
     actions.appendChild(deleteBtn);
     header.appendChild(orderInfo);
     header.appendChild(actions);
     card.appendChild(header);
 
-    if (order.customer) {
-      const customerSection = document.createElement("div");
-      customerSection.className = "customer-section";
+    const customerSection = document.createElement("div");
+    customerSection.className = "customer-section";
 
-      const customerTitle = document.createElement("h4");
-      customerTitle.className = "section-title";
-      customerTitle.textContent = "Customer Information";
+    const customerTitle = document.createElement("h4");
+    customerTitle.className = "section-title";
+    customerTitle.textContent = "Customer Information";
 
-      const customerDetails = document.createElement("div");
-      customerDetails.className = "customer-details";
-      customerDetails.innerHTML = `
-        <div><strong>Name:</strong> ${order.customer.name || "N/A"}</div>
-        <div><strong>Email:</strong> ${order.customer.email || "N/A"}</div>
-        <div><strong>Phone:</strong> ${order.customer.phone || "N/A"}</div>
-        <div><strong>Address:</strong> ${order.customer.address || "N/A"}</div>
-      `;
+    const customerDetails = document.createElement("div");
+    customerDetails.className = "customer-details";
+    customerDetails.innerHTML = `
+      <div><strong>Name:</strong> ${order.customer_name || "N/A"}</div>
+      <div><strong>Email:</strong> ${order.email || "N/A"}</div>
+      <div><strong>Phone:</strong> ${order.phone || "N/A"}</div>
+      <div><strong>Address:</strong> ${order.street || ""}, ${order.zipcode || ""} ${order.city || ""}, ${order.country || ""}</div>
+    `;
 
-      customerSection.appendChild(customerTitle);
-      customerSection.appendChild(customerDetails);
-      card.appendChild(customerSection);
+    customerSection.appendChild(customerTitle);
+    customerSection.appendChild(customerDetails);
+    card.appendChild(customerSection);
+
+    let orderContent = [];
+    try {
+      orderContent = order.content ? JSON.parse(order.content) : [];
+    } catch (error) {
+      console.error("Error parsing order content:", error);
     }
 
-    if (order.items && order.items.length > 0) {
+    if (orderContent.length > 0) {
       const itemsSection = document.createElement("div");
       itemsSection.className = "items-section";
 
@@ -178,7 +177,7 @@ class AdminOrdersView extends HTMLElement {
       const itemsList = document.createElement("div");
       itemsList.className = "order-items";
 
-      order.items.forEach((item) => {
+      orderContent.forEach((item) => {
         const itemDiv = document.createElement("div");
         itemDiv.className = "order-item";
 
@@ -210,11 +209,19 @@ class AdminOrdersView extends HTMLElement {
 
     const totalAmount = document.createElement("span");
     totalAmount.className = "total-amount";
-    const subtotal = order.items?.reduce(
-      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
-      0
-    ) || 0;
-    const shipping = order.shippingCost || 0;
+    
+    let subtotal = 0;
+    try {
+      const content = order.content ? JSON.parse(order.content) : [];
+      subtotal = content.reduce(
+        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+        0
+      );
+    } catch (error) {
+      console.error("Error calculating total:", error);
+    }
+    
+    const shipping = order.shipping_cost || 0;
     totalAmount.textContent = `${(subtotal + shipping).toFixed(2)} kr`;
 
     totalDiv.appendChild(totalLabel);
@@ -226,15 +233,19 @@ class AdminOrdersView extends HTMLElement {
 
   // ----------------------------------------------------------------
 
-  deleteOrder(orderNumber) {
-    if (!confirm(`Are you sure you want to delete order #${orderNumber}?`)) {
+  async deleteOrderHandler(orderId) {
+    if (!confirm(`Are you sure you want to delete order #${orderId}?`)) {
       return;
     }
 
-    const orders = this.getOrdersFromStorage();
-    const filteredOrders = orders.filter((order) => order.orderNumber !== orderNumber);
-    this.saveOrdersToStorage(filteredOrders);
-    this.displayOrders(filteredOrders);
+    try {
+      await deleteOrder(orderId);
+      showMessage("Order deleted successfully");
+      await this.loadOrders();
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      showMessage("Failed to delete order. Please try again.");
+    }
   }
 }
 
