@@ -1,13 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Checkout</title>
-  <link rel="stylesheet" href="./checkout.css" />
-</head>
-<body>
-  <main id="checkout-root"></main>
-  <script type="module" src="./checkout.js"></script>
-</body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Checkout</title>
+        <link rel="stylesheet" href="checkout.css">
+    </head>
+    <body>
+        <main class="checkout">
+            <h1>Checkout</h1>
+
+            <!-- Step 1: Customer info -->
+            <section id="step1" class="step">
+                <h2>1 — Customer information</h2>
+                <form id="customerForm">
+                    <label>
+                        Full name
+                        <input type="text" id="name" name="name" required />
+                    </label>
+
+                    <label>
+                        Email
+                        <input type="email" id="email" name="email" required />
+                    </label>
+
+                    <label>
+                        Address
+                        <input type="text" id="address" name="address" />
+                    </label>
+
+                    <label>
+                        City
+                        <input type="text" id="city" name="city" />
+                    </label>
+
+                    <label>
+                        ZIP / Postal
+                        <input type="text" id="zip" name="zip" />
+                    </label>
+                </form>
+            </section>
+
+            <!-- Step 2: Shipping -->
+            <section id="step2" class="step">
+                <h2>2 — Shipping method</h2>
+                <div id="shippingArea">
+                    <p id="shippingLoading">Loading shipping methods…</p>
+                    <ul id="shippingList" class="shipping-list" aria-live="polite"></ul>
+                </div>
+            </section>
+
+            <!-- Step 3: Summary -->
+            <section id="step3" class="step">
+                <h2>3 — Summary</h2>
+                <div class="summary">
+                    <div>Subtotal: <span id="subtotal">0.00</span> kr</div>
+                    <div>Shipping: <span id="shippingCost">0.00</span> kr</div>
+                    <hr />
+                    <div class="total">Total: <strong id="total">0.00</strong> kr</div>
+                </div>
+
+                <div style="margin-top:1rem">
+                    <button id="placeOrderBtn">Place order</button>
+                </div>
+            </section>
+        </main>
+
+        <script src="checkout.js"></script>
+    </body>
 </html>
