@@ -18,7 +18,10 @@ function template(){
       </section>
       <aside class="info">
         <h3>Customer info</h3>
-        <input id="name" placeholder="Name" /><input id="email" placeholder="Email" />
+        <input id="name" placeholder="Name"/>
+        <br/><br/>
+        <input id="email" placeholder="Email" />
+          <br/><br/>
         <input id="address" placeholder="Address" />
         <div class="button-row">
           <button id="btn-home">Home</button>
@@ -39,7 +42,7 @@ function getCart(){
   return [{ id:347,name:'Banana Bug Bonanza',price:32,quantity:2 }];
 }
 
-function renderCart(){
+function renderCart(){ // henter alle varer i handlekurven og viser dem her
   const list = getCart();
   const el = document.getElementById('cart-list');
   if(!list || !list.length){ el.textContent = 'Cart is empty'; return; }
@@ -49,7 +52,7 @@ function renderCart(){
   el.insertAdjacentHTML('beforeend', `<div style="font-weight:700;margin-top:8px">Subtotal: ${subtotal.toFixed(0)} kr</div>`);
 }
 
-function bind(){
+function bind(){ // bind buttons
   document.getElementById('btn-home').addEventListener('click', ()=>document.dispatchEvent(new CustomEvent('navigate-home',{bubbles:true,composed:true})));
   document.getElementById('btn-place').addEventListener('click', placeOrder);
 }
