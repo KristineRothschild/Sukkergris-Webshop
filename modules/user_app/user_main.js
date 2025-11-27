@@ -3,6 +3,7 @@ import {
   ProductDetailsView,
   ProductListView,
   ShoppingCartView,
+  ConfirmationView,
 } from "./views/index.js";
 import { getCategories, getProductById } from "../api_service.js";
 
@@ -12,12 +13,14 @@ const homePage = new HomeView();
 const catDetails = new ProductListView();
 const candyDetails = new ProductDetailsView();
 const shoppingCartView = new ShoppingCartView();
+const confirmationView = new ConfirmationView();
 
 const viewMap = {
   homePage: homePage,
   catDetails: catDetails,
   candyDetails: candyDetails,
   shoppingCart: shoppingCartView,
+  confirmation: confirmationView,
 };
 
 let cachedCategories = [];
@@ -27,7 +30,13 @@ restoreCartFromStorage();
 
 history.replaceState("homePage", "");
 loadCategories();
-navigateTo("homePage", false);
+
+if (window.location.hash === '#confirmation') {
+  confirmationView.displayOrder();
+  navigateTo("confirmation", false);
+} else {
+  navigateTo("homePage", false);
+}
 
 //-----------------------------------------------
 
@@ -170,6 +179,14 @@ pageContainer.addEventListener("cartClearRequested", function () {
   cartState.clear();
   persistCart();
   refreshCartView();
+});
+
+pageContainer.addEventListener("navigate-home", function () {
+  navigateTo("homePage", true);
+});
+
+pageContainer.addEventListener("navigate-home", function () {
+  navigateTo("homePage", true);
 });
 
 pageContainer.addEventListener("searchSubmitted", function (evt) {

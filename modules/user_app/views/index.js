@@ -2,3 +2,4 @@ export { HomeView } from "./home-view/home-view.js";
 export { ProductListView } from "./product-list-view/product-list-view.js";
 export { ProductDetailsView } from "./product-details-view/product-details-view.js";
 export { ShoppingCartView } from "./shopping-cart-view/shopping-cart-view.js";
+export { ConfirmationView } from "./Confirmation-view/confirmation.js";

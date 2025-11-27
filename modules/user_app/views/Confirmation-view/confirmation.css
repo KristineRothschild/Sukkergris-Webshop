@@ -16,7 +16,6 @@ body {
   background: var(--bg);
 }
 
-
 main, main.confirmation {
   max-width: 960px;
   margin: 2rem auto;
@@ -24,6 +23,40 @@ main, main.confirmation {
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   padding: 2rem;
+}
+
+/* Header styling to match shopping cart */
+.confirmation__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  margin: -2rem -2rem 1.5rem -2rem;
+  padding: 1.5rem 2rem;
+  background: white;
+  border-radius: 16px 16px 0 0;
+}
+
+.confirmation__header-info h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.confirmation__back-button {
+  border: none;
+  background: #222;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirmation__back-button:hover {
+  background: #444;
 }
 
 h1 { 
@@ -36,15 +69,14 @@ h2 {
   margin: 0 0 0.75rem; 
   color: var(--text); }
 
-
 table { 
   width: 100%; 
   border-collapse: collapse; 
-  font-size: 0.95rem;
+  font-size: 1.5rem;
   }
 thead th { 
   text-align: left; 
-  font-size: 0.85rem; 
+  font-size: 1.5rem; 
   text-transform: uppercase; 
   color: var(--muted); 
   padding-bottom: 0.6rem; 
@@ -66,12 +98,10 @@ td {
   font-size: 1.8rem; 
   font-weight: 700; margin-top: 0.5rem; }
 
-
 p { 
   margin: 0.5rem 0;
+  font-size: 1.5rem;
   }
-
-
 
 @media (max-width: 640px) {
   main, main.confirmation { margin: 1.5rem; padding: 1.5rem; }
