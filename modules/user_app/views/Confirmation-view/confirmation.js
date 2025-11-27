@@ -15,15 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (el('custPhone')) el('custPhone').textContent = 'Phone: ' + (order.customer.phone || '-');
   }
 
-  
   if (order && order.orderNumber) el('orderNumber').textContent = '#' + order.orderNumber;
 
-  // Shipping
   if (order && order.shipping) {
     el('shippingMethod').textContent = order.shipping.id || '-'; //el means element by id 
   }
 
-  // Total pris
   if (order && typeof order.total !== 'undefined') el('totalAmount').textContent = (Number(order.total) || 0).toFixed(2) + ' kr';
 
  
