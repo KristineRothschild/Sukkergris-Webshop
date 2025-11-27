@@ -1,66 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit products</title>
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="edit_product.css" />
-    </head>
-    <body>
-        <main class="page">
-            <header style="text-align:center; padding:1rem 0;">
-                <h1>Edit products</h1>
-                <p style="margin:0.25rem 0 1rem; color: #6a5b52;">Add, edit and remove products you add locally.</p>
-                <button id="addProductBtn" class="back-button">+ Add product</button>
-            </header>
+<main class="page">
+  <header style="text-align:center; padding:1rem 0;">
+    <h1>Edit products</h1>
+    <p style="margin:0.25rem 0 1rem; color: #6a5b52;">
+      Add, edit and remove products you add locally.
+    </p>
+    <button id="addProductBtn" class="back-button">+ Add product</button>
+  </header>
 
-            <section>
-                <div class="product-list" id="productList">
-                    <div class="empty-state">No products yet — click "Add product" to create one.</div>
-                </div>
-            </section>
-            <button class="back-button" type="button" id="backBtn">Back</button>
-        </main>
+  <section>
+    <div class="product-list" id="productList">
+      <div class="empty-state">
+        No products yet — click "Add product" to create one.
+      </div>
+    </div>
+  </section>
+  <button class="back-button" type="button" id="backBtn">Back</button>
+</main>
 
-        <!-- Modal for adding/editing products -->
-        <div id="productModal" class="modal hidden" aria-hidden="true">
-            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-                <h2 id="modalTitle">Add product</h2>
-                <form id="productForm">
-                    <label>
-                        Name
-                        <input type="text" id="prodName" name="name" required />
-                    </label>
+<!-- Modal for adding/editing products -->
+<div id="productModal" class="modal hidden" aria-hidden="true">
+  <div
+    class="modal-content"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <h2 id="modalTitle">Add product</h2>
+    <form id="productForm">
+      <label>
+        Name
+        <input type="text" id="prodName" name="name" required />
+      </label>
 
-                    <label>
-                        Description
-                        <textarea id="prodDesc" name="description" rows="2"></textarea>
-                    </label>
+      <label>
+        Description
+        <textarea id="prodDesc" name="description" rows="2"></textarea>
+      </label>
 
-                    <label>
-                        Price (NOK)
-                        <input type="number" id="prodPrice" name="price" min="0" step="0.01" required />
-                    </label>
+      <label>
+        Price (NOK)
+        <input
+          type="number"
+          id="prodPrice"
+          name="price"
+          min="0"
+          step="0.01"
+          required
+        />
+      </label>
 
-                    <label>
-                        Image URL
-                        <input type="url" id="prodImage" name="image" placeholder="https://..." />
-                    </label>
+      <label>
+        Image URL
+        <input type="url" id="prodImage" name="image" placeholder="https://..." />
+      </label>
 
-                    <div class="image-preview">
-                        <img id="imagePreview" src="" alt="preview" />
-                    </div>
+      <div class="image-preview">
+        <img id="imagePreview" src="" alt="preview" />
+      </div>
 
-                    <div class="modal-actions">
-                        <button type="button" id="cancelBtn" class="back-button">Cancel</button>
-                        <button type="submit" id="saveBtn" class="back-button">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <script type="module" src="edit_product.js"></script>
-    </body>
-</html>
+      <div class="modal-actions">
+        <button type="button" id="cancelBtn" class="back-button">Cancel</button>
+        <button type="submit" id="saveBtn" class="back-button">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
