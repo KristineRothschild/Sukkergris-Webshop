@@ -68,6 +68,37 @@ class ConfirmationView extends HTMLElement {
       this.el('shippingMethod').textContent = order.shipping.id || '-';
     }
 
+    // Calculate and display estimated shipping date
+    if (order && order.orderNumber) {
+      const orderDate = new Date(order.orderNumber);
+      let daysToAdd = 3; // Default shipping time
+      
+      // Adjust days based on shipping method
+      if (order.shipping && order.shipping.id) {
+        const shippingId = order.shipping.id.toString().toLowerCase();
+        if (shippingId.includes('express') || shippingId === '4') {
+          daysToAdd = 1;
+        } else if (shippingId.includes('pickup') || shippingId === '1') {
+          daysToAdd = 0;
+        } else if (shippingId === '2') {
+          daysToAdd = 2;
+        } else if (shippingId === '3') {
+          daysToAdd = 3;
+        }
+      }
+      
+      const estimatedDate = new Date(orderDate);
+      estimatedDate.setDate(estimatedDate.getDate() + daysToAdd);
+      
+      const dateStr = estimatedDate.toLocaleDateString('nb-NO', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      this.el('shippingDate').textContent = daysToAdd === 0 ? 'Ready for pickup today' : dateStr;
+    }
+
     // Display total amount
     if (order && typeof order.total !== 'undefined') {
       this.el('totalAmount').textContent = (Number(order.total) || 0).toFixed(2) + ' kr';
