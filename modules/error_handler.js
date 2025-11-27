@@ -1,11 +1,11 @@
-//-----------------------------------------------------------
+import { showMessage } from "./msg_handler.js";
+
+//--------------------------------------------
+
 export function errorHandler(error) {
-  // handle errors here, e.g. show a dialog with an easy-to-understand explanation
-  // based on the error type/code.
+  showMessage("Something went wrong: " + error);
 
-  console.log("Something went wrong: " + error);
+  if (typeof console !== "undefined" && typeof console.error === "function") {
+    console.error("API-feil:", error);
+  }
 }
-
-//-----------------------------------------------------------
-
-// add more functions below for handling errors when needed

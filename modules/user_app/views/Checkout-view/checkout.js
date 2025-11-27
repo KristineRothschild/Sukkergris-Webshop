@@ -3,6 +3,8 @@ const stylesURL = new URL("./checkout.css", import.meta.url);
 const SHIPPING_API_URL =
   "https://sukkergris.onrender.com/logistics/shippingtypes?key=HJINAS11";
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -17,6 +19,8 @@ async function loadTemplate(url) {
 const checkoutTemplate = await loadTemplate(templateURL);
 
 class CheckoutView extends HTMLElement {
+  //--------------------------------------------
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -31,10 +35,14 @@ class CheckoutView extends HTMLElement {
     this.registerEvents();
   }
 
+  //--------------------------------------------
+
   connectedCallback() {
     this.refresh();
     this.loadShipping();
   }
+
+  //--------------------------------------------
 
   refresh(items) {
     if (Array.isArray(items)) {
@@ -46,6 +54,8 @@ class CheckoutView extends HTMLElement {
     this.updateSubtotal();
     this.updateTotals();
   }
+
+  //--------------------------------------------
 
   registerRefs() {
     const root = this.shadowRoot;
@@ -59,6 +69,8 @@ class CheckoutView extends HTMLElement {
     this.errorEl = root.querySelector("[data-error-message]");
     this.placeOrderBtn = root.querySelector("[data-place-order]");
   }
+
+  //--------------------------------------------
 
   registerEvents() {
     const root = this.shadowRoot;
@@ -81,6 +93,8 @@ class CheckoutView extends HTMLElement {
     this.shippingList?.addEventListener("change", () => this.updateTotals());
   }
 
+  //--------------------------------------------
+
   readCartFromStorage() {
     const raw = localStorage.getItem("sukkergrisCart");
     if (!raw) {
@@ -99,6 +113,8 @@ class CheckoutView extends HTMLElement {
       return [];
     }
   }
+
+  //--------------------------------------------
 
   renderOrderList() {
     if (!this.orderList) {
@@ -120,6 +136,8 @@ class CheckoutView extends HTMLElement {
     });
   }
 
+  //--------------------------------------------
+
   async loadShipping() {
     this.showShippingMessage("Loading shipping options...");
     try {
@@ -139,6 +157,8 @@ class CheckoutView extends HTMLElement {
     }
   }
 
+  //--------------------------------------------
+
   async fetchShipping() {
     const response = await fetch(SHIPPING_API_URL);
     if (!response.ok) {
@@ -153,10 +173,12 @@ class CheckoutView extends HTMLElement {
     }
     return list.map((item) => ({
       id: item.id ?? item.typeId ?? "shipping",
-      name: item.name ?? item.title ?? "Shipping",
+      name: item.type ?? item.name ?? item.title ?? "Shipping",
       price: Number(item.price ?? item.cost ?? 0) || 0,
     }));
   }
+
+  //--------------------------------------------
 
   renderShipping(methods) {
     if (!this.shippingList) {
@@ -170,6 +192,7 @@ class CheckoutView extends HTMLElement {
       input.name = "shipping";
       input.value = method.id;
       input.dataset.price = String(method.price);
+      input.dataset.type = method.name;
       if (index === 0) {
         input.checked = true;
       }
@@ -181,6 +204,8 @@ class CheckoutView extends HTMLElement {
       this.shippingList.append(li);
     });
   }
+
+  //--------------------------------------------
 
   showShippingMessage(message) {
     if (!this.shippingLoading) {
@@ -195,6 +220,8 @@ class CheckoutView extends HTMLElement {
     this.shippingLoading.removeAttribute("hidden");
   }
 
+  //--------------------------------------------
+
   updateSubtotal() {
     const sum = this.cartItems.reduce((total, item) => {
       return total + (Number(item.price) || 0) * (Number(item.quantity) || 0);
@@ -205,18 +232,23 @@ class CheckoutView extends HTMLElement {
     }
   }
 
+  //--------------------------------------------
+
   selectedShipping() {
     const selected = this.shadowRoot.querySelector(
       'input[name="shipping"]:checked'
     );
     if (!selected) {
-      return { id: null, price: 0 };
+      return { id: null, price: 0, type: "" };
     }
     return {
       id: selected.value,
       price: Number(selected.dataset.price) || 0,
+      type: selected.dataset.type || "",
     };
   }
+
+  //--------------------------------------------
 
   updateTotals() {
     const shipping = this.selectedShipping();
@@ -228,6 +260,8 @@ class CheckoutView extends HTMLElement {
       this.totalEl.textContent = this.formatCurrency(total);
     }
   }
+
+  //--------------------------------------------
 
   handlePlaceOrder() {
     this.hideError();
@@ -263,6 +297,8 @@ class CheckoutView extends HTMLElement {
     );
   }
 
+  //--------------------------------------------
+
   readCustomerData() {
     if (!this.form) {
       return {};
@@ -278,6 +314,8 @@ class CheckoutView extends HTMLElement {
     };
   }
 
+  //--------------------------------------------
+
   showError(message) {
     if (!this.errorEl) {
       return;
@@ -286,6 +324,8 @@ class CheckoutView extends HTMLElement {
     this.errorEl.hidden = false;
   }
 
+  //--------------------------------------------
+
   hideError() {
     if (!this.errorEl) {
       return;
@@ -293,6 +333,8 @@ class CheckoutView extends HTMLElement {
     this.errorEl.hidden = true;
     this.errorEl.textContent = "";
   }
+
+  //--------------------------------------------
 
   formatCurrency(value) {
     const safe = Number.isFinite(value) ? value : 0;

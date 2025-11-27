@@ -1,4 +1,7 @@
 const templateURL = new URL("./product-list-view.html", import.meta.url);
+
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -17,6 +20,9 @@ const productListStylesURL = new URL(
 );
 
 class ProductListView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -41,7 +47,7 @@ class ProductListView extends HTMLElement {
     }
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   refresh(products = [], options = {}) {
     const { emptyMessage = "No products to show." } = options;
@@ -68,6 +74,7 @@ class ProductListView extends HTMLElement {
       `;
 
       productCard.addEventListener("click", () => {
+
         const productSelected = new CustomEvent("productSelected", {
           composed: true,
           bubbles: true,
@@ -80,9 +87,10 @@ class ProductListView extends HTMLElement {
     });
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   handleBackClick() {
+
     const productListBack = new CustomEvent("productListBack", {
       composed: true,
       bubbles: true,
@@ -90,9 +98,10 @@ class ProductListView extends HTMLElement {
     this.shadow.dispatchEvent(productListBack);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   handleCartClick() {
+
     const cartRequested = new CustomEvent("cartRequested", {
       composed: true,
       bubbles: true,

@@ -2,6 +2,8 @@ const templateURL = new URL("./edit_product.html", import.meta.url);
 const stylesURL = new URL("./edit_product.css", import.meta.url);
 const STORAGE_KEY = "localProducts";
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -16,6 +18,8 @@ async function loadTemplate(url) {
 const editProductTemplate = await loadTemplate(templateURL);
 
 export class EditProductView extends HTMLElement {
+  //--------------------------------------------
+
   constructor() {
     super();
     this.products = [];
@@ -32,6 +36,8 @@ export class EditProductView extends HTMLElement {
     this.handleDocumentKeyDown = this.handleDocumentKeyDown.bind(this);
   }
 
+  //--------------------------------------------
+
   connectedCallback() {
     this.cacheElements();
     this.bindEvents();
@@ -40,10 +46,14 @@ export class EditProductView extends HTMLElement {
     document.addEventListener("keydown", this.handleDocumentKeyDown);
   }
 
+  //--------------------------------------------
+
   disconnectedCallback() {
     this.unbindEvents();
     document.removeEventListener("keydown", this.handleDocumentKeyDown);
   }
+
+  //--------------------------------------------
 
   cacheElements() {
     this.productList = this.shadow.querySelector("#productList");
@@ -60,6 +70,8 @@ export class EditProductView extends HTMLElement {
     this.imagePreview = this.shadow.querySelector("#imagePreview");
   }
 
+  //--------------------------------------------
+
   bindEvents() {
     this.addProductBtn?.addEventListener("click", this.openModalForAdd);
     this.cancelBtn?.addEventListener("click", this.closeModal);
@@ -68,6 +80,8 @@ export class EditProductView extends HTMLElement {
     this.modal?.addEventListener("click", this.handleModalBackdrop);
     this.form?.addEventListener("submit", this.handleSubmit);
   }
+
+  //--------------------------------------------
 
   unbindEvents() {
     this.addProductBtn?.removeEventListener("click", this.openModalForAdd);
@@ -79,6 +93,7 @@ export class EditProductView extends HTMLElement {
   }
 
   //--------------------------------------------
+
   loadFromStorage() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -89,16 +104,23 @@ export class EditProductView extends HTMLElement {
     }
   }
 
+  //--------------------------------------------
+
   saveToStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.products));
   }
+
+  //--------------------------------------------
 
   formatPrice(value) {
     if (value == null || value === "") {
       return "";
     }
+
     return `${Number(value).toFixed(2)} kr.`;
   }
+
+  //--------------------------------------------
 
   renderProducts() {
     if (!this.productList) return;
@@ -166,6 +188,8 @@ export class EditProductView extends HTMLElement {
     });
   }
 
+  //--------------------------------------------
+
   openModalForEdit = (id) => {
     this.editingId = id;
     const product = this.products.find((item) => item.id === id);
@@ -179,6 +203,8 @@ export class EditProductView extends HTMLElement {
     this.openModal();
   };
 
+  //--------------------------------------------
+
   openModalForAdd = () => {
     this.editingId = null;
     if (this.modalTitle) this.modalTitle.textContent = "Add product";
@@ -187,6 +213,8 @@ export class EditProductView extends HTMLElement {
     this.openModal();
   };
 
+  //--------------------------------------------
+
   openModal() {
     if (!this.modal) return;
     this.modal.classList.remove("hidden");
@@ -194,11 +222,15 @@ export class EditProductView extends HTMLElement {
     this.nameInput?.focus();
   }
 
+  //--------------------------------------------
+
   closeModal = () => {
     if (!this.modal) return;
     this.modal.classList.add("hidden");
     this.modal.setAttribute("aria-hidden", "true");
   };
+
+  //--------------------------------------------
 
   handleModalBackdrop = (event) => {
     if (event.target === this.modal) {
@@ -206,9 +238,13 @@ export class EditProductView extends HTMLElement {
     }
   };
 
+  //--------------------------------------------
+
   handlePreviewUpdate = (event) => {
     this.updatePreview(event.target.value);
   };
+
+  //--------------------------------------------
 
   updatePreview(url) {
     if (!this.imagePreview) return;
@@ -221,12 +257,16 @@ export class EditProductView extends HTMLElement {
     this.imagePreview.style.display = "block";
   }
 
+  //--------------------------------------------
+
   addProduct(payload) {
     const id = Date.now().toString();
     this.products.unshift({ id, ...payload, isLocal: true });
     this.saveToStorage();
     this.renderProducts();
   }
+
+  //--------------------------------------------
 
   updateProduct(id, updates) {
     const index = this.products.findIndex((product) => product.id === id);
@@ -235,6 +275,8 @@ export class EditProductView extends HTMLElement {
     this.saveToStorage();
     this.renderProducts();
   }
+
+  //--------------------------------------------
 
   deleteProduct(id) {
     const index = this.products.findIndex((product) => product.id === id);
@@ -248,6 +290,8 @@ export class EditProductView extends HTMLElement {
     this.saveToStorage();
     this.renderProducts();
   }
+
+  //--------------------------------------------
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -276,6 +320,8 @@ export class EditProductView extends HTMLElement {
     this.closeModal();
   };
 
+  //--------------------------------------------
+
   emitBackEvent = () => {
     this.dispatchEvent(
       new CustomEvent("edit-product-back", {
@@ -284,6 +330,8 @@ export class EditProductView extends HTMLElement {
       })
     );
   };
+
+  //--------------------------------------------
 
   handleDocumentKeyDown(event) {
     if (

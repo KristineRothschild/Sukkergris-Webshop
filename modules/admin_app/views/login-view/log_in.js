@@ -3,6 +3,8 @@ const stylesURL = new URL("./log_in.css", import.meta.url);
 const iconStylesURL =
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -17,6 +19,9 @@ async function loadTemplate(url) {
 const loginTemplate = await loadTemplate(templateURL);
 
 class AdminLoginView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -33,6 +38,8 @@ class AdminLoginView extends HTMLElement {
     this.shadow.append(styleLink, iconLink, fragment);
   }
 
+//--------------------------------------------
+
   connectedCallback() {
     this.form = this.shadow.querySelector("#loginForm");
     if (this.form) {
@@ -40,11 +47,15 @@ class AdminLoginView extends HTMLElement {
     }
   }
 
+//--------------------------------------------
+
   disconnectedCallback() {
     if (this.form) {
       this.form.removeEventListener("submit", this.handleSubmit);
     }
   }
+
+//--------------------------------------------
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -65,6 +76,7 @@ class AdminLoginView extends HTMLElement {
 
     if (username === validUsername && password === validPassword) {
       document.dispatchEvent(
+
         new CustomEvent("admin-login-success", {
           bubbles: true,
           composed: true,

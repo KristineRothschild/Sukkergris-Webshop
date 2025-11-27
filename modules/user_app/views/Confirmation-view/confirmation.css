@@ -25,7 +25,7 @@ main, main.confirmation {
   padding: 2rem;
 }
 
-/* Header styling to match shopping cart */
+
 .confirmation__header {
   display: flex;
   justify-content: space-between;

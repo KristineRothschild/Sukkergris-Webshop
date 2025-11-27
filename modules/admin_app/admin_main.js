@@ -1,15 +1,6 @@
-import {
-  getCategories,
-  getAllProducts,
-  addProduct,
-  getProductsByCategory,
-} from "../api_service.js";
+import { getCategories } from "../api_service.js";
 
-import {
-  CategoryView,
-  ProductForm,
-  ProductView,
-} from "./views/category-view/admin_product_views.js";
+import { CategoryView } from "./views/category-view/admin_product_views.js";
 import { AdminOverviewView } from "./views/admin-oversikt-view/admin_oversikt.js";
 import { AdminOrdersView } from "./views/admin-orders-view/admin-orders.js";
 import { AdminLoginView } from "./views/login-view/log_in.js";
@@ -18,18 +9,20 @@ import { showMessage } from "../msg_handler.js";
 
 const app = document.getElementById("app");
 
+//------------------------------------------------
+
 function showLoginView() {
   app.innerHTML = "";
   const loginView = new AdminLoginView();
   app.appendChild(loginView);
 }
 
-// Start with login page
+//------------------------------------------------
+
 showLoginView();
 
 const oversiktView = new AdminOverviewView();
 
-// Listen for successful login
 document.addEventListener("admin-login-success", function () {
   app.innerHTML = "";
   app.appendChild(oversiktView);
@@ -44,7 +37,6 @@ app.addEventListener("admin-navigate", async function (evt) {
 
       const catView = new CategoryView();
       const categories = await getCategories();
-      console.log("Categories loaded:", categories);
       catView.refresh(categories);
       app.appendChild(catView);
 
@@ -53,10 +45,8 @@ app.addEventListener("admin-navigate", async function (evt) {
         app.appendChild(oversiktView);
       });
 
-      // Handle edit button clicks
       catView.addEventListener("category-edit", function (evt) {
         const categoryData = evt.categoryData;
-        console.log("Edit category:", categoryData);
 
         try {
           app.innerHTML = "";
@@ -67,12 +57,12 @@ app.addEventListener("admin-navigate", async function (evt) {
           app.appendChild(editView);
         } catch (error) {
           console.error("Error loading edit product view:", error);
-          showMessage("Feil ved lasting av redigeringsside");
+          showMessage("Error loading edit product view");
         }
       });
     } catch (error) {
       console.error("Error loading categories:", error);
-      showMessage("Feil ved lasting av kategorier");
+      showMessage("Error loading categories");
     }
   }
 
@@ -89,14 +79,13 @@ app.addEventListener("admin-navigate", async function (evt) {
       });
     } catch (error) {
       console.error("Error loading orders:", error);
-      showMessage("Feil ved lasting av bestillinger");
+      showMessage("Error loading orders");
     }
   }
-
-  // Senere: håndter users, comments her
 });
 
-// Listen for back from edit product page
+//------------------------------------------------
+
 document.addEventListener("edit-product-back", async function () {
   try {
     app.innerHTML = "";
@@ -113,7 +102,6 @@ document.addEventListener("edit-product-back", async function () {
 
     catView.addEventListener("category-edit", function (evt) {
       const categoryData = evt.categoryData;
-      console.log("Edit category:", categoryData);
 
       try {
         app.innerHTML = "";
@@ -124,11 +112,11 @@ document.addEventListener("edit-product-back", async function () {
         app.appendChild(editView);
       } catch (error) {
         console.error("Error loading edit product view:", error);
-        showMessage("Feil ved lasting av redigeringsside");
+        showMessage("Error loading edit product view");
       }
     });
   } catch (error) {
     console.error("Error returning to categories:", error);
-    showMessage("Feil ved lasting av kategorier");
+    showMessage("Error returning to categories");
   }
 });

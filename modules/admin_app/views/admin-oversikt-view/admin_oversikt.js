@@ -1,5 +1,7 @@
 const templateURL = new URL("./admin_oversikt.html", import.meta.url);
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -15,6 +17,9 @@ const adminOverviewTemplate = await loadTemplate(templateURL);
 const adminOverviewStylesURL = new URL("./admin_oversikt.css", import.meta.url);
 
 class AdminOverviewView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -25,6 +30,8 @@ class AdminOverviewView extends HTMLElement {
     this.shadow.append(styleLink, fragment);
     this.renderAdminMenu();
   }
+
+//--------------------------------------------
 
   renderAdminMenu() {
     const menuContainer = this.shadow.querySelector("[data-admin-menu]");
@@ -45,6 +52,7 @@ class AdminOverviewView extends HTMLElement {
       button.dataset.section = section.id;
 
       button.addEventListener("click", () => {
+
         const navigationEvent = new CustomEvent("admin-navigate", {
           composed: true,
           bubbles: true,
