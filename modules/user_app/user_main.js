@@ -3,6 +3,8 @@ import {
   ProductDetailsView,
   ProductListView,
   ShoppingCartView,
+  CheckoutView,
+  ConfirmationView,
 } from "./views/index.js";
 import { getCategories, getProductById } from "../api_service.js";
 
@@ -12,12 +14,16 @@ const homePage = new HomeView();
 const catDetails = new ProductListView();
 const candyDetails = new ProductDetailsView();
 const shoppingCartView = new ShoppingCartView();
+const checkoutView = new CheckoutView();
+const confirmationView = new ConfirmationView();
 
 const viewMap = {
   homePage: homePage,
   catDetails: catDetails,
   candyDetails: candyDetails,
   shoppingCart: shoppingCartView,
+  checkout: checkoutView,
+  confirmation: confirmationView,
 };
 
 let cachedCategories = [];
@@ -124,7 +130,15 @@ pageContainer.addEventListener("cartRequested", function () {
 });
 
 pageContainer.addEventListener("checkoutRequested", function () {
-  window.location.href = "./modules/user_app/views/Checkout-view/checkout.html";
+  navigateTo("checkout", true);
+});
+
+pageContainer.addEventListener("navigate-confirmation", function () {
+  navigateTo("confirmation", true);
+});
+
+pageContainer.addEventListener("navigate-home", function () {
+  navigateTo("homePage", true);
 });
 
 pageContainer.addEventListener("addToCart", function (evt) {
