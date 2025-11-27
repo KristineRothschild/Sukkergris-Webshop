@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
     el('custName').textContent = 'Name: ' + (order.customer.name || '-');
     el('custEmail').textContent = 'Email: ' + (order.customer.email || '-');
     el('custAddress').textContent = 'Address: ' + [order.customer.address, order.customer.city, order.customer.zip].filter(Boolean).join(', ') || '-';
+    // phone (may be undefined if form has not been updated)
+    if (el('custPhone')) el('custPhone').textContent = 'Phone: ' + (order.customer.phone || '-');
   }
 
   
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Shipping
   if (order && order.shipping) {
-    el('shippingMethod').textContent = order.shipping.id || '-';
+    el('shippingMethod').textContent = order.shipping.id || '-'; //el means element by id 
   }
 
   // Total pris
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const total = (unit * quantity).toFixed(2);
 
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + key + '</td>' +
+      tr.innerHTML = '<td>' + key + '</td>' + //td means table data
                      '<td>' + (product.name || '-') + '</td>' +
                      '<td>' + quantity + '</td>' +
                      '<td>' + unit.toFixed(2) + ' kr</td>' +
