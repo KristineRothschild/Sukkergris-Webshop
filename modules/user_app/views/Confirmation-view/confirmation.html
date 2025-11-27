@@ -1,39 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Order confirmation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="confirmation.css">
-</head>
-<body>
-  <main>
+<section class="confirmation">
+  <header class="confirmation__header">
+    <div class="confirmation__header-info">
+      <h1>Order Confirmation</h1>
+    </div>
+    <button type="button" class="confirmation__back-button" data-back-home>
+      Back to home
+    </button>
+  </header>
 
-    <h1>Order confirmation</h1>
+<p>Order number: <strong id="orderNumber">-</strong></p>
 
-    <p>Order number: <strong id="orderNumber">-</strong></p>
+<h2>Customer</h2>
+<p id="custName">Name: -</p>
+<p id="custEmail">Email: -</p>
+<p id="custPhone">Phone: -</p>
+<p id="custAddress">Address: -</p>
 
-    <h2>Customer</h2>
-    <p id="custName">Name: -</p>
-    <p id="custEmail">Email: -</p>
-    <p id="custPhone">Phone: -</p>
-    <p id="custAddress">Address: -</p>
+<h2>Items</h2>
+<table id="items" border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr><th>Product #</th><th>Name</th><th>Qty</th><th>Unit</th><th>Total</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-    <h2>Items</h2>
-    <table id="items" border="1" cellpadding="6" cellspacing="0">
-      <thead>
-        <tr><th>Product #</th><th>Name</th><th>Qty</th><th>Unit</th><th>Total</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+<p>Shipping method: <span id="shippingMethod">-</span></p>
+<p>Estimated shipping date: <span id="shippingDate">-</span></p>
 
-    <p>Shipping method: <span id="shippingMethod">-</span></p>
-    <p>Estimated shipping date: <span id="shippingDate">-</span></p>
+<p class="total">Total: <span id="totalAmount">0.00 kr</span></p>
 
-    <p class="total">Total: <span id="totalAmount">0.00 kr</span></p>
-  </main>
-
-  <script src="confirmation.js"></script>
-</body>
-</html>
+  </div> <!-- End confirmation__content -->
+</section>
