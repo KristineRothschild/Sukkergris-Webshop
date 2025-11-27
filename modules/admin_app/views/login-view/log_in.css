@@ -1,17 +1,12 @@
 :host {
-  display: block;
-  color: #433025;
-  font-family: "Playfair Display", serif;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f8f5f1;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin: 0;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  color: #433025;
+  font-family: "Playfair Display", serif;
 }
 
 .login-container {
@@ -44,7 +39,7 @@ label {
   margin: 10px 0 5px;
   color: #433025;
   font-weight: 500;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.9rem;
 }
 
@@ -54,7 +49,7 @@ input[type="password"] {
   border: 1px solid #ded5c9;
   border-radius: 8px;
   font-size: 14px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   background: #fdf8f2;
@@ -76,7 +71,7 @@ button {
   color: #433025;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   cursor: pointer;
@@ -96,6 +91,12 @@ button:hover {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
