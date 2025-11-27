@@ -73,7 +73,8 @@ function init(){
 			},
 			shipping: selectedShipping(),
 			subtotal: Number($('#subtotal').textContent) || 0,
-			total: Number($('#total').textContent) || 0
+			total: Number($('#total').textContent) || 0,
+			orderNumber: Date.now() // Temporary order number
 		};
 
 		// Basic validation: require name and email and a shipping method

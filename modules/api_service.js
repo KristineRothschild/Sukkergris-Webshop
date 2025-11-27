@@ -99,4 +99,25 @@ export async function addProduct(product) {
 
 //---------------------------------------------------------
 
+export async function addOrder(orderData) {
+  const url = `https://sukkergris.onrender.com/webshop/orders?key=${groupkey}`;
+  const token = sessionStorage.getItem("token");
+
+  const cfg = {
+    method: "POST",
+    headers: {
+      "authorization": token || "",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(orderData)
+  };
+
+  try {
+    const data = await sendRequest(url, cfg);
+    return data; // ← Dette inneholder { order_number: "12345", ... }
+  } catch (error) {
+    errorHandler(error);
+  }
+}
+
 //add more functions below when needed
