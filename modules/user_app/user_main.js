@@ -4,6 +4,7 @@ import {
   ProductListView,
   ShoppingCartView,
   ConfirmationView,
+  CheckoutView,
 } from "./views/index.js";
 import { getCategories, getProductById } from "../api_service.js";
 
@@ -14,6 +15,7 @@ const catDetails = new ProductListView();
 const candyDetails = new ProductDetailsView();
 const shoppingCartView = new ShoppingCartView();
 const confirmationView = new ConfirmationView();
+const checkoutView = new CheckoutView();
 
 const viewMap = {
   homePage: homePage,
@@ -21,6 +23,7 @@ const viewMap = {
   candyDetails: candyDetails,
   shoppingCart: shoppingCartView,
   confirmation: confirmationView,
+  checkout: checkoutView,
 };
 
 let cachedCategories = [];
@@ -31,7 +34,7 @@ restoreCartFromStorage();
 history.replaceState("homePage", "");
 loadCategories();
 
-if (window.location.hash === '#confirmation') {
+if (window.location.hash === "#confirmation") {
   confirmationView.displayOrder();
   navigateTo("confirmation", false);
 } else {
@@ -52,7 +55,7 @@ async function loadCategories() {
 
     homePage.refresh(categories);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -86,7 +89,6 @@ async function handleCategorySelection(categoryDetail) {
       `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&category=${categoryId}`
     );
     const data = await response.json();
-    console.log("Products:", data);
     catDetails.refresh(data, {
       emptyMessage: "No products in this category.",
     });
@@ -112,7 +114,6 @@ pageContainer.addEventListener("productSelected", async function (evt) {
     if (categoryName) {
       product.catName = categoryName;
     }
-    console.log("Product details:", product);
     candyDetails.refresh(product);
     navigateTo("candyDetails", true);
   } catch (error) {
@@ -133,7 +134,7 @@ pageContainer.addEventListener("cartRequested", function () {
 });
 
 pageContainer.addEventListener("checkoutRequested", function () {
-  window.location.href = "./modules/user_app/views/Checkout-view/checkout.html";
+  showCheckoutView(true);
 });
 
 pageContainer.addEventListener("addToCart", function (evt) {
@@ -142,6 +143,10 @@ pageContainer.addEventListener("addToCart", function (evt) {
 
 pageContainer.addEventListener("cartBack", function () {
   navigateTo("homePage", true);
+});
+
+pageContainer.addEventListener("navigate-cart", function () {
+  showCartView(true);
 });
 
 pageContainer.addEventListener("cartQuantityChanged", function (evt) {
@@ -189,6 +194,11 @@ pageContainer.addEventListener("navigate-home", function () {
   navigateTo("homePage", true);
 });
 
+pageContainer.addEventListener("orderPlaced", function () {
+  confirmationView.displayOrder();
+  navigateTo("confirmation", true);
+});
+
 pageContainer.addEventListener("searchSubmitted", function (evt) {
   const searchTerm = evt.detail.searchTerm?.trim() ?? "";
   if (!searchTerm) {
@@ -223,7 +233,6 @@ async function handleSearch(searchTerm) {
       `https://sukkergris.onrender.com/webshop/products?key=HJINAS11&search=${searchParam}`
     );
     const data = await response.json();
-    console.log(`Search results for "${searchTerm}":`, data);
 
     catDetails.refresh(data, {
       emptyMessage: `No products found for «${searchTerm}».`,
@@ -303,9 +312,17 @@ function showCartView(push) {
 
 //------------------------------------------------
 
+function showCheckoutView(push) {
+  checkoutView.refresh(collectCartItems());
+  navigateTo("checkout", push);
+}
+
+//------------------------------------------------
+
 function refreshCartView() {
   const cartItems = collectCartItems();
   shoppingCartView.refresh(cartItems);
+  checkoutView.refresh(cartItems);
 }
 
 //------------------------------------------------

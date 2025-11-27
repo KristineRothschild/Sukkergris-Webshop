@@ -1,5 +1,7 @@
 const templateURL = new URL("./admin-orders.html", import.meta.url);
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -15,6 +17,9 @@ const adminOrdersTemplate = await loadTemplate(templateURL);
 const adminOrdersStylesURL = new URL("./admin-orders.css", import.meta.url);
 
 class AdminOrdersView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -28,18 +33,19 @@ class AdminOrdersView extends HTMLElement {
     this.setupEventListeners();
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   connectedCallback() {
     this.loadOrders();
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   setupEventListeners() {
     const backButton = this.shadow.querySelector("[data-back-button]");
     if (backButton) {
       backButton.addEventListener("click", () => {
+
         const backEvent = new CustomEvent("orders-back", {
           bubbles: true,
           composed: true,
@@ -49,14 +55,14 @@ class AdminOrdersView extends HTMLElement {
     }
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   loadOrders() {
     const orders = this.getOrdersFromStorage();
     this.displayOrders(orders);
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   getOrdersFromStorage() {
     try {
@@ -68,7 +74,7 @@ class AdminOrdersView extends HTMLElement {
     }
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   saveOrdersToStorage(orders) {
     try {
@@ -78,7 +84,7 @@ class AdminOrdersView extends HTMLElement {
     }
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   displayOrders(orders) {
     if (!this.ordersList) return;
@@ -107,7 +113,7 @@ class AdminOrdersView extends HTMLElement {
     });
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   createOrderCard(order) {
     const card = document.createElement("div");
@@ -224,7 +230,7 @@ class AdminOrdersView extends HTMLElement {
     return card;
   }
 
-  // ----------------------------------------------------------------
+//--------------------------------------------
 
   deleteOrder(orderNumber) {
     if (!confirm(`Are you sure you want to delete order #${orderNumber}?`)) {

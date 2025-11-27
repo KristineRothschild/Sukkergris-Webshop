@@ -1,37 +1,51 @@
-
-body {
+:host {
+  display: block;
   font-family: "Playfair Display", serif;
   color: #222;
-  margin: 0;
-  padding: 0;
   background: #fdf8f2;
 }
 
-main.checkout {
+.checkout {
   max-width: 960px;
-  margin: 2rem auto;
-  background: #ffffff;
+  margin: 1.5rem auto;
+  background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
 }
 
-h1 {
-  margin: 0 0 2rem;
-  font-size: 3rem;
-  color: #222;
+.checkout__header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-top: 0;
-  margin-bottom: 1.25rem;
-  color: #222;
+.checkout__lead {
+  margin: 0.25rem 0 0;
+  color: #5f4a3e;
+}
+
+.checkout__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.checkout__back-btn {
+  border: none;
+  background: #222;
+  color: #fff;
+  height: 40px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 .step {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #f1d3bf;
 }
 
@@ -39,29 +53,25 @@ h2 {
   border-bottom: none;
 }
 
-#customerForm label {
+form label {
   display: block;
   margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #333;
 }
 
-input[type=text],
-input[type=email] {
+input[type="text"],
+input[type="email"] {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid rgba(207, 207, 207, 0.12);
+  border: 1px solid rgba(207, 207, 207, 0.6);
   border-radius: 8px;
-  font-family: inherit;
-  font-size: 1.5rem;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
-input[type=text]:focus,
-input[type=email]:focus {
+input:focus {
   outline: none;
   border-color: #f1d3bf;
-  
+  box-shadow: 0 0 0 2px rgba(241, 211, 191, 0.5);
 }
 
 .shipping-list {
@@ -71,53 +81,43 @@ input[type=email]:focus {
 }
 
 .shipping-list li {
-  padding: 1rem;
-  border: 1px solid rgba(95, 74, 62, 0.12);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1.5rem;
-}
-
-.shipping-list input[type=radio] {
-  cursor: pointer;
-}
-
-.shipping-list label {
-  cursor: pointer;
-  margin: 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(95, 74, 62, 0.15);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
 }
 
 .order-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem 0;
+  margin: 0;
 }
 
 .order-list li {
-  padding: 1rem;
-  border: 1px solid rgba(95, 74, 62, 0.12);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-  font-size: 1.5rem;
-  color: #333;
+  padding: 0.75rem;
+  border: 1px solid rgba(95, 74, 62, 0.15);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .summary {
   background: #fffaf5;
-  padding: 1.5rem;
+  padding: 1.25rem;
   border: 1px solid rgba(95, 74, 62, 0.12);
   border-radius: 12px;
-  margin: 1.5rem 0;
+  margin-bottom: 1rem;
 }
 
 .summary > div {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .summary hr {
@@ -126,51 +126,38 @@ input[type=email]:focus {
   margin: 0.75rem 0;
 }
 
-.total {
-  font-size: 1.5rem;
-  margin-top: 0.75rem;
-  color: #222;
+.total strong {
+  font-size: 1.2rem;
 }
 
-#placeOrderBtn {
-   width: 100%;
+button[data-place-order] {
+  width: 100%;
   border: 1px solid #2f2a28;
   background: #f3f3f3;
-  color: #202020;
-  padding: 0.5rem 0.9rem;
   border-radius: 8px;
+  padding: 0.6rem 0.9rem;
   font-weight: 600;
-  font-size: 1.5rem;
-  font-family: inherit;
   cursor: pointer;
-  margin-top: 0.6rem;
 }
 
-#placeOrderBtn:hover,
-#placeOrderBtn:focus {
+button[data-place-order]:hover {
   background: #f1e4d7;
-  box-shadow: 0 10px 25px rgba(67, 48, 37, 0.15);
   color: #433025;
 }
 
-#placeOrderBtn:active {
-  transform: translateY(1px);
+.checkout__error {
+  color: #b00020;
+  margin-top: 0.75rem;
 }
 
 @media (max-width: 640px) {
-  main.checkout {
-    margin: 1.5rem;
-    padding: 1.5rem;
+  .checkout {
+    margin: 1rem;
+    padding: 1rem;
   }
 
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  .step {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
+  .checkout__actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
-.order-list{list-style:none;padding:0;margin:8px 0}
-.order-list li{padding:8px;border:1px solid #eee;border-radius:6px;margin-bottom:4px}

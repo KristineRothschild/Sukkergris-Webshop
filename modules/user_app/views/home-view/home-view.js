@@ -1,4 +1,7 @@
 const templateURL = new URL("./home-view.html", import.meta.url);
+
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -14,6 +17,9 @@ const homeViewTemplate = await loadTemplate(templateURL);
 const homeViewStylesURL = new URL("./home-view.css", import.meta.url);
 
 class HomeView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -26,7 +32,7 @@ class HomeView extends HTMLElement {
     this.registerEventListeners();
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   refresh(categories = []) {
     if (!this.categoryGrid) {
@@ -47,6 +53,7 @@ class HomeView extends HTMLElement {
       cardButton.textContent = this.resolveCategoryName(category);
 
       cardButton.addEventListener("click", () => {
+
         const categorySelected = new CustomEvent("categorySelected", {
           composed: true,
           bubbles: true,
@@ -59,7 +66,7 @@ class HomeView extends HTMLElement {
     });
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   registerEventListeners() {
     const searchForm = this.shadow.querySelector(".hero-search");
@@ -68,6 +75,7 @@ class HomeView extends HTMLElement {
         event.preventDefault();
         const searchInput = this.shadow.querySelector(".hero-search-input");
         const searchTerm = searchInput?.value?.trim() ?? "";
+
         const searchSubmitted = new CustomEvent("searchSubmitted", {
           composed: true,
           bubbles: true,
@@ -80,6 +88,7 @@ class HomeView extends HTMLElement {
     const cartButton = this.shadow.querySelector(".cart-button");
     if (cartButton) {
       cartButton.addEventListener("click", () => {
+
         const cartRequested = new CustomEvent("cartRequested", {
           composed: true,
           bubbles: true,
@@ -89,7 +98,7 @@ class HomeView extends HTMLElement {
     }
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   resolveCategoryName(category) {
     if (category?.catName) {

@@ -1,84 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-        <title>Checkout</title>
-        <link rel="stylesheet" href="checkout.css">
-    </head>
-    <body>
-        <main class="checkout">
-            <h1>Checkout</h1>
+<section class="checkout">
+  <header class="checkout__header">
+    <div>
+      <h1>Checkout</h1>
+      <p class="checkout__lead">Complete your order in three steps.</p>
+    </div>
+    <div class="checkout__actions">
+      <button type="button" class="checkout__back-btn" data-back-cart>
+        Back to cart
+      </button>
+      <button type="button" class="checkout__back-btn" data-home>
+        Back to home
+      </button>
+    </div>
+  </header>
 
-            <!-- Step 1: Customer info -->
-            <section id="step1" class="step">
-                <h2>Customer information</h2>
-                <form id="customerForm">
-                    <label>
-                        Full name
-                        <input type="text" id="name" name="name" required />
-                    </label>
+  <section class="step">
+    <h2>Customer information</h2>
+    <form id="customerForm" novalidate>
+      <label>
+        Full name
+        <input type="text" id="name" name="name" required />
+      </label>
+      <label>
+        Email
+        <input type="email" id="email" name="email" required />
+      </label>
+      <label>
+        Phone
+        <input type="text" id="phone" name="phone" />
+      </label>
+      <label>
+        Address
+        <input type="text" id="address" name="address" />
+      </label>
+      <label>
+        City
+        <input type="text" id="city" name="city" />
+      </label>
+      <label>
+        Postal code
+        <input type="text" id="zip" name="zip" />
+      </label>
+    </form>
+  </section>
 
-                    <label>
-                        Email
-                        <input type="email" id="email" name="email" required />
-                    </label>
+  <section class="step">
+    <h2>Shipping method</h2>
+    <div class="shipping" aria-live="polite">
+      <p data-shipping-loading>Loading shipping options...</p>
+      <ul class="shipping-list" data-shipping-list></ul>
+    </div>
+  </section>
 
-                    <label>
-                        Phone
-                        <input type="text" id="phone" name="phone" />
-                    </label>
+  <section class="step">
+    <h2>Products</h2>
+    <ul class="order-list" data-order-list></ul>
+  </section>
 
-                    <label>
-                        Address
-                        <input type="text" id="address" name="address" />
-                    </label>
-
-                    <label>
-                        City
-                        <input type="text" id="city" name="city" />
-                    </label>
-
-                    <label>
-                        ZIP / Postal
-                        <input type="text" id="zip" name="zip" />
-                    </label>
-
-                </form>
-            </section>
-
-            <!-- Step 2: Shipping -->
-            <section id="step2" class="step">
-                <h2>Shipping method</h2>
-                <div id="shippingArea">
-                    <p id="shippingLoading">Loading shipping methods…</p>
-                    <ul id="shippingList" class="shipping-list" aria-live="polite"></ul>
-                </div>
-            </section>
-
-            <!-- Step 2b: Order items -->
-            <section id="step2b" class="step">
-                <h2>Order items</h2>
-                <ul id="orderList" class="order-list"></ul>
-            </section>
-
-            <!-- Step 3: Summary -->
-            <section id="step3" class="step">
-                <h2>Summary</h2>
-                <div class="summary">
-                    <div>Subtotal: <span id="subtotal">0.00</span> kr</div>
-                    <div>Shipping: <span id="shippingCost">0.00</span> kr</div>
-                    <hr />
-                    <div class="total">Total: <strong id="total">0.00</strong> kr</div>
-                </div>
-
-                <div style="margin-top:1rem">
-                    <button id="placeOrderBtn">Place order</button>
-                </div>
-            </section>
-        </main>
-
-        <script src="checkout.js"></script>
-    </body>
-</html>
+  <section class="step">
+    <h2>Summary</h2>
+    <div class="summary">
+      <div>
+        <span>Subtotal</span>
+        <span data-subtotal>0,00</span>
+      </div>
+      <div>
+        <span>Shipping</span>
+        <span data-shipping-cost>0,00</span>
+      </div>
+      <hr />
+      <div class="total">
+        <span>Total</span>
+        <strong data-total>0,00</strong>
+      </div>
+    </div>
+    <button type="button" data-place-order>Place order</button>
+    <p class="checkout__error" data-error-message hidden></p>
+  </section>
+</section>

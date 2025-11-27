@@ -10,6 +10,9 @@ const templateHTML = `
 `;
 
 class ProductDetailsView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     const shadow = this.attachShadow({ mode: "open" });
@@ -23,7 +26,7 @@ class ProductDetailsView extends HTMLElement {
     }
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   refresh(product) {
     if (!this.wrapper) {
@@ -133,9 +136,10 @@ class ProductDetailsView extends HTMLElement {
     }
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   emitBack() {
+
     const productDetailsBack = new CustomEvent("productDetailsBack", {
       composed: true,
       bubbles: true,
@@ -143,7 +147,10 @@ class ProductDetailsView extends HTMLElement {
     this.dispatchEvent(productDetailsBack);
   }
 
+//--------------------------------------------
+
   emitAddToCart(product) {
+
     const addToCartEvent = new CustomEvent("addToCart", {
       composed: true,
       bubbles: true,
@@ -152,7 +159,10 @@ class ProductDetailsView extends HTMLElement {
     this.dispatchEvent(addToCartEvent);
   }
 
+//--------------------------------------------
+
   emitCartRequested() {
+
     const cartRequested = new CustomEvent("cartRequested", {
       composed: true,
       bubbles: true,

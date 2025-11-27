@@ -1,34 +1,94 @@
-//login knapp - admin: user august.gloop@sukkergris.no/ passord: laffylaffy
-//denne siden skal blokke deg tilgang om brukernavn/passord er feil.
-//Skal ta videre til admin oversikt
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission and page reload
+const templateURL = new URL("./log_in.html", import.meta.url);
+const stylesURL = new URL("./log_in.css", import.meta.url);
+const iconStylesURL =
+  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
+//--------------------------------------------
 
-    const username = usernameInput.value;
-    const password = passwordInput.value;
+async function loadTemplate(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Kunne ikke laste login-template fra ${url}`);
+  }
+  const html = await response.text();
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  return template;
+}
 
-    // Basic client-side validation (e.g., check for empty fields)
+const loginTemplate = await loadTemplate(templateURL);
+
+class AdminLoginView extends HTMLElement {
+
+//--------------------------------------------
+
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: "open" });
+    const fragment = loginTemplate.content.cloneNode(true);
+
+    const styleLink = document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = stylesURL.href;
+
+    const iconLink = document.createElement("link");
+    iconLink.rel = "stylesheet";
+    iconLink.href = iconStylesURL;
+
+    this.shadow.append(styleLink, iconLink, fragment);
+  }
+
+//--------------------------------------------
+
+  connectedCallback() {
+    this.form = this.shadow.querySelector("#loginForm");
+    if (this.form) {
+      this.form.addEventListener("submit", this.handleSubmit);
+    }
+  }
+
+//--------------------------------------------
+
+  disconnectedCallback() {
+    if (this.form) {
+      this.form.removeEventListener("submit", this.handleSubmit);
+    }
+  }
+
+//--------------------------------------------
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    const usernameInput = this.shadow.querySelector("#username");
+    const passwordInput = this.shadow.querySelector("#password");
+
+    const username = usernameInput?.value.trim();
+    const password = passwordInput?.value.trim();
+
     if (!username || !password) {
-        alert('Please enter both username and password.');
-        return; // Stop the function if validation fails
+      alert("Please enter both username and password.");
+      return;
     }
 
-    // In a real application, you would send these credentials to a server
-    // for authentication (e.g., using fetch() or XMLHttpRequest).
-    // For this example, we'll use a simple hardcoded check.
-    const validUsername = 'augustus.gloop@sukkergris.no';
-    const validPassword = 'laffytaffy';
+    const validUsername = "augustus.gloop@sukkergris.no";
+    const validPassword = "laffytaffy";
 
     if (username === validUsername && password === validPassword) {
-        // Dispatch event to notify admin_main.js
-        document.dispatchEvent(new CustomEvent('admin-login-success', {
-            bubbles: true,
-            composed: true
-        }));
-    } else {
-        alert('Invalid username or password.');
+      document.dispatchEvent(
+
+        new CustomEvent("admin-login-success", {
+          bubbles: true,
+          composed: true,
+        })
+      );
+      return;
     }
-});
+
+    alert("Invalid username or password.");
+  };
+}
+
+customElements.define("admin-login-view", AdminLoginView);
+
+export { AdminLoginView };

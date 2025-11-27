@@ -1,5 +1,7 @@
 const templateURL = new URL("./shopping-cart-view.html", import.meta.url);
 
+//--------------------------------------------
+
 async function loadTemplate(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -15,6 +17,9 @@ const cartTemplate = await loadTemplate(templateURL);
 const cartStylesURL = new URL("./shopping-cart-view.css", import.meta.url);
 
 class ShoppingCartView extends HTMLElement {
+
+//--------------------------------------------
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -38,7 +43,7 @@ class ShoppingCartView extends HTMLElement {
     });
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   refresh(items = []) {
     const hasItems = Array.isArray(items) && items.length > 0;
@@ -127,6 +132,7 @@ class ShoppingCartView extends HTMLElement {
     checkoutButton.textContent = "Proceed to checkout";
     checkoutButton.addEventListener("click", () =>
       this.dispatchEvent(
+
         new CustomEvent("checkoutRequested", { composed: true, bubbles: true })
       )
     );
@@ -138,7 +144,7 @@ class ShoppingCartView extends HTMLElement {
     this.contentTarget.append(layout);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderProductCell({
     displayNumber,
@@ -155,7 +161,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderProductMeta(displayNumber, productName, noteMarkup) {
     return `
@@ -167,7 +173,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderLineFooter(productId, quantity) {
     return `
@@ -178,7 +184,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderQuantityControl(productId, quantity) {
     return `
@@ -208,7 +214,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderQuantityButton({ action, label, aria }) {
     return `
@@ -223,7 +229,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   renderRemoveButton(productId) {
     return `
@@ -238,7 +244,7 @@ class ShoppingCartView extends HTMLElement {
     `;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   handleQuantityChange(event) {
     const target = event.target;
@@ -257,7 +263,7 @@ class ShoppingCartView extends HTMLElement {
     this.emitQuantityUpdate(productId, normalized);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   handleRemoveClick(event) {
     const target = event.target;
@@ -273,6 +279,7 @@ class ShoppingCartView extends HTMLElement {
       return;
     }
     this.dispatchEvent(
+
       new CustomEvent("cartItemRemoved", {
         composed: true,
         bubbles: true,
@@ -281,9 +288,10 @@ class ShoppingCartView extends HTMLElement {
     );
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   emitBack() {
+
     const cartBack = new CustomEvent("cartBack", {
       composed: true,
       bubbles: true,
@@ -291,7 +299,7 @@ class ShoppingCartView extends HTMLElement {
     this.dispatchEvent(cartBack);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   handleQuantityButtonClick(event) {
     const target = event.target;
@@ -322,10 +330,11 @@ class ShoppingCartView extends HTMLElement {
     this.emitQuantityUpdate(productId, current);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   emitQuantityUpdate(productId, quantity) {
     this.dispatchEvent(
+
       new CustomEvent("cartQuantityChanged", {
         composed: true,
         bubbles: true,
@@ -334,10 +343,11 @@ class ShoppingCartView extends HTMLElement {
     );
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   emitClearCart() {
     this.dispatchEvent(
+
       new CustomEvent("cartClearRequested", {
         composed: true,
         bubbles: true,
@@ -345,7 +355,7 @@ class ShoppingCartView extends HTMLElement {
     );
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   resolveNumber(value) {
     const parsed = Number(value);
@@ -355,7 +365,7 @@ class ShoppingCartView extends HTMLElement {
     return 0;
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   formatCurrency(value) {
     const safeValue = Number.isFinite(value) ? value : 0;
@@ -365,7 +375,7 @@ class ShoppingCartView extends HTMLElement {
     }).format(safeValue);
   }
 
-  //------------------------------------------------
+//--------------------------------------------
 
   resolveShippingLabel(dateString) {
     if (!dateString) {

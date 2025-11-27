@@ -1,4 +1,5 @@
-//fetch wrapper function ----------------------------------
+//--------------------------------------------
+
 export async function sendRequest(url, cfg) {
   try {
     const response = await fetch(url, cfg);
@@ -14,21 +15,20 @@ export async function sendRequest(url, cfg) {
   }
 }
 
-// --------------------------------------------------------
+//--------------------------------------------
+
 export function createBasicAuthString(username, password) {
   let combinedStr = username + ":" + password;
   let b64Str = btoa(combinedStr);
-  return "basic " + b64Str; //return the basic auth. string
+  return "basic " + b64Str;
 }
 
-//----------------------------------------------------------
+//--------------------------------------------
+
 export function sanitizeString(str) {
   if (!str) {
     return;
   }
   str = str.replace(/[^a-zA-Z0-9 .,_-]/g, "");
-  return str.trim(); // Trim leading/trailing whitespace
+  return str.trim();
 }
-
-//-----------------------------------------------------------
-// more utility-functions here if needed...
