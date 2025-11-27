@@ -1,5 +1,13 @@
-<main>
-  <h1>Order confirmation</h1>
+<section class="confirmation">
+  <header class="confirmation_header">
+    <div class="confirmation_header-info">
+      <h1>Order confirmation</h1>
+    </div>
+    <button type="button" class="confirmation_home-button" data-back-home>
+      Back to home
+    </button>
+  </header>
+  <div class="confirmation_content">
 
     <p>Order number: <strong id="orderNumber">-</strong></p>
 
@@ -21,8 +29,8 @@
     <p>Estimated shipping date: <span id="shippingDate">-</span></p>
 
     <p class="total">Total: <span id="totalAmount">0.00 kr</span></p>
-  </main>
+  
 
   <script src="confirmation.js"></script>
-</body>
-</html>
+  </div>
+</section>

@@ -204,6 +204,17 @@ class CheckoutView extends HTMLElement {
         console.warn('Could not load cart', e);
       }
     }
+
+    // Handle back to home button
+    const backBtn = this.shadow.querySelector('[data-back-home]');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        this.dispatchEvent(new CustomEvent('navigate-home', {
+          bubbles: true,
+          composed: true
+        }));
+      });
+    }
   }
 }
 

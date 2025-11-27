@@ -99,6 +99,17 @@ class ConfirmationView extends HTMLElement {
         tbody.appendChild(tr);
       });
     }
+
+    //---------------------------------
+    const backBtn = this.shadow.querySelector('[data-back-home]');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        this.dispatchEvent(new CustomEvent('navigate-home', {
+          bubbles: true,
+          composed: true
+        }));
+      });
+    }
   }
 }
 

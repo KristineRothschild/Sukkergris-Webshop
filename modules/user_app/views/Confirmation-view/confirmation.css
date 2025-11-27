@@ -1,29 +1,45 @@
 
-:root{
-  --bg: #fdf8f2;
-  --panel: #ffffff;
-  --muted: #8f7f76;
-  --text: #222;
-}
-
-html, body { height: 100%; }
-
-body {
-  margin: 0;
-  padding: 0;
+:host {
+  display: block;
   font-family: "Playfair Display", serif;
-  color: var(--text);
-  background: var(--bg);
+  color: #222;
 }
 
-
-main, main.confirmation {
+.confirmation {
   max-width: 960px;
   margin: 2rem auto;
-  background: var(--panel);
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   padding: 2rem;
+}
+
+.confirmation_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.confirmation_header-info h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.confirmation_home-button {
+  border: none;
+  background: #222;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirmation_content {
+  margin-top: 1.5rem;
 }
 
 h1 { 
@@ -34,7 +50,8 @@ h1 {
 h2 { 
   font-size: 1.8rem; 
   margin: 0 0 0.75rem; 
-  color: var(--text); }
+  color: #222;
+}
 
 
 table { 
@@ -74,6 +91,6 @@ p {
 
 
 @media (max-width: 640px) {
-  main, main.confirmation { margin: 1.5rem; padding: 1.5rem; }
+  .confirmation { margin: 1.5rem; padding: 1.5rem; }
   table { font-size: 0.9rem; }
 }

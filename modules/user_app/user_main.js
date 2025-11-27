@@ -36,6 +36,13 @@ loadCategories();
 navigateTo("homePage", false);
 
 //-----------------------------------------------
+window.addEventListener("popstate", function (event) {
+  if (event.state && viewMap[event.state]) {
+    navigateTo(event.state, false);
+  }
+});
+
+//-----------------------------------------------
 
 async function loadCategories() {
   try {

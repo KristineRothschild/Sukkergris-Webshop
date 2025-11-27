@@ -1,25 +1,45 @@
 
-body {
+:host {
+  display: block;
   font-family: "Playfair Display", serif;
   color: #222;
-  margin: 0;
-  padding: 0;
-  background: #fdf8f2;
 }
 
-main.checkout {
+.checkout {
   max-width: 960px;
   margin: 2rem auto;
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   padding: 2rem;
 }
 
-h1 {
-  margin: 0 0 2rem;
-  font-size: 3rem;
-  color: #222;
+.checkout_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.checkout_header-info h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.checkout_home-button {
+  border: none;
+  background: #222;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.checkout_content {
+  margin-top: 1.5rem;
 }
 
 h2 {
@@ -158,13 +178,9 @@ input[type=email]:focus {
 }
 
 @media (max-width: 640px) {
-  main.checkout {
+  .checkout {
     margin: 1.5rem;
     padding: 1.5rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
   }
 
   .step {
