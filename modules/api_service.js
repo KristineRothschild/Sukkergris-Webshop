@@ -121,3 +121,15 @@ export async function addOrder(orderData) {
 }
 
 //add more functions below when needed
+
+//--------------------------------------------------------
+export async function getShippingMethods() {
+  const url = `https://sukkergris.onrender.com/logistics/shippingtypes?key=${groupkey}`;
+
+  try {
+    const data = await sendRequest(url);
+    return data;
+  } catch (error) {
+    errorHandler(error);
+  }
+}

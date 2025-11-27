@@ -14,8 +14,8 @@ async function loadTemplate(url) {
 const checkoutTemplate = await loadTemplate(templateURL);
 const checkoutStylesURL = new URL("./checkout.css", import.meta.url);
 
-// Import API service for placing orders
-import { addOrder } from '../../../api_service.js';
+// Import API service for placing orders and shipping methods
+import { addOrder, getShippingMethods } from '../../../api_service.js';
 
 // Web Component class for CheckoutView
 class CheckoutView extends HTMLElement {
@@ -30,14 +30,6 @@ class CheckoutView extends HTMLElement {
     styleLink.rel = "stylesheet";
     styleLink.href = checkoutStylesURL.href;
     this.shadow.append(styleLink, fragment);
-    
-    // Constants for shipping
-    this.SHIPPING_API_URL = '';
-    this.SAMPLE_SHIPPING = [
-      { id: 'standard', name: 'Standard (3-5 days)', price: 39.0 },
-      { id: 'express', name: 'Express (1-2 days)', price: 79.0 },
-      { id: 'pickup', name: 'Pickup (store)', price: 0.0 }
-    ];
   }
 
   // Called when component is added to DOM
@@ -60,24 +52,20 @@ class CheckoutView extends HTMLElement {
     const list = this.$('#shippingList');
     list.innerHTML = methods.map(m =>
       `<li><input type="radio" name="shipping" value="${m.id}" data-price="${m.price}">` +
-      `<label style="flex:1">${m.name} — ${this.format(m.price)} kr</label></li>`
+      `<label style="flex:1">${m.type} — ${this.format(m.price)} kr</label></li>`
     ).join('');
     list.addEventListener('change', () => this.updateTotals());
   }
 
-  // Fetch shipping methods from API or use sample data
+  // Fetch shipping methods from API
   async fetchShipping() {
-    if (!this.SHIPPING_API_URL) {
-      return this.SAMPLE_SHIPPING;
-    }
     try {
-      const res = await fetch(this.SHIPPING_API_URL);
-      if (!res.ok) throw new Error('Network');
-      const data = await res.json();
+      const data = await getShippingMethods();
+      console.log('Shipping data from API:', data); // Debug log
       return data;
     } catch (e) {
-      console.warn('Failed to fetch shipping, using sample', e);
-      return this.SAMPLE_SHIPPING;
+      console.warn('Failed to fetch shipping methods', e);
+      return [];
     }
   }
 
@@ -116,7 +104,7 @@ class CheckoutView extends HTMLElement {
 
     // Handle place order button click
     this.$('#placeOrderBtn').addEventListener('click', async (e) => {
-		
+
       const order = {
         customer: {
           name: this.$('#name').value,
