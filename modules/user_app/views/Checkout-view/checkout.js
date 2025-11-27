@@ -1,11 +1,5 @@
 const SHIPPING_API_URL = 'https://sukkergris.onrender.com/logistics/shippingtypes?key=HJINAS11'; // shipping API with group key
 
-// Simple sample shipping methods used if no API URL is provided
-const SAMPLE_SHIPPING = [
-	{ id: 'standard', name: 'Standard (3-5 days)', price: 39.0 },
-	{ id: 'express', name: 'Express (1-2 days)', price: 79.0 },
-	{ id: 'pickup', name: 'Pickup (store)', price: 0.0 } //vi trenger shipping api her -dette er bare eksempeldata
-];
 
 function $(sel){ return document.querySelector(sel); } //denne funksjonen henter elementer frå DOM - som betyr at du kan bruke den til å hente elementer frå HTML-dokumentet ved hjelp av CSS-selektorar.
 
@@ -16,7 +10,7 @@ function renderShippingList(methods){
 	// Build simple HTML for radios — shorter and still vanilla
 	list.innerHTML = methods.map(m =>
 		`<li><input type="radio" name="shipping" value="${m.id}" data-price="${m.price}">` +
-		`<label style="flex:1">${m.name} — ${format(m.price)} kr</label></li>`
+		`<label style="flex:1">${m.name} — ${format(m.price)} kr</label></li>` //m står for metode
 	).join('');
 	// Single event listener for changes (delegation)
 	list.addEventListener('change', updateTotals);
@@ -30,7 +24,7 @@ async function fetchShipping(){
 		const data = await res.json();
 		let list = Array.isArray(data) ? data : data.shippingTypes || data.shippingtypes || data.data || Object.values(data).find(Array.isArray) || SAMPLE_SHIPPING;
 		return (list || SAMPLE_SHIPPING).map(m => {
-			const id = m.id ?? m.typeId ?? m.code ?? m.key ?? ''; //ai shit - fatte ikje lol
+			const id = m.id ?? m.typeId ?? m.code ?? m.key ?? '';
 			const name = m.name ?? m.title ?? m.type ?? m.description ?? id;
 			let price = m.price ?? m.cost ?? m.amount ?? 0;
 			if (typeof price === 'string') price = Number(price.replace(/[^0-9.-]/g, '')) || 0;
@@ -69,6 +63,7 @@ function init(){
 	$('#placeOrderBtn').addEventListener('click', (e) => {
 		// gather customer info
 		const order = {
+			orderNumber: Math.floor(Math.random() * 101),
 			customer: {
 				name: $('#name').value,
 				email: $('#email').value,
