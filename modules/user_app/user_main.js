@@ -4,6 +4,7 @@ import {
   ProductListView,
   ShoppingCartView,
   ConfirmationView,
+  CheckoutView,
 } from "./views/index.js";
 import { getCategories, getProductById } from "../api_service.js";
 
@@ -14,6 +15,7 @@ const catDetails = new ProductListView();
 const candyDetails = new ProductDetailsView();
 const shoppingCartView = new ShoppingCartView();
 const confirmationView = new ConfirmationView();
+const checkoutView = new CheckoutView();
 
 const viewMap = {
   homePage: homePage,
@@ -21,6 +23,7 @@ const viewMap = {
   candyDetails: candyDetails,
   shoppingCart: shoppingCartView,
   confirmation: confirmationView,
+  checkout: checkoutView,
 };
 
 let cachedCategories = [];
@@ -31,7 +34,7 @@ restoreCartFromStorage();
 history.replaceState("homePage", "");
 loadCategories();
 
-if (window.location.hash === '#confirmation') {
+if (window.location.hash === "#confirmation") {
   confirmationView.displayOrder();
   navigateTo("confirmation", false);
 } else {
@@ -133,7 +136,7 @@ pageContainer.addEventListener("cartRequested", function () {
 });
 
 pageContainer.addEventListener("checkoutRequested", function () {
-  window.location.href = "./modules/user_app/views/Checkout-view/checkout.html";
+  showCheckoutView(true);
 });
 
 pageContainer.addEventListener("addToCart", function (evt) {
@@ -142,6 +145,10 @@ pageContainer.addEventListener("addToCart", function (evt) {
 
 pageContainer.addEventListener("cartBack", function () {
   navigateTo("homePage", true);
+});
+
+pageContainer.addEventListener("navigate-cart", function () {
+  showCartView(true);
 });
 
 pageContainer.addEventListener("cartQuantityChanged", function (evt) {
@@ -187,6 +194,11 @@ pageContainer.addEventListener("navigate-home", function () {
 
 pageContainer.addEventListener("navigate-home", function () {
   navigateTo("homePage", true);
+});
+
+pageContainer.addEventListener("orderPlaced", function () {
+  confirmationView.displayOrder();
+  navigateTo("confirmation", true);
 });
 
 pageContainer.addEventListener("searchSubmitted", function (evt) {
@@ -303,9 +315,17 @@ function showCartView(push) {
 
 //------------------------------------------------
 
+function showCheckoutView(push) {
+  checkoutView.refresh(collectCartItems());
+  navigateTo("checkout", push);
+}
+
+//------------------------------------------------
+
 function refreshCartView() {
   const cartItems = collectCartItems();
   shoppingCartView.refresh(cartItems);
+  checkoutView.refresh(cartItems);
 }
 
 //------------------------------------------------

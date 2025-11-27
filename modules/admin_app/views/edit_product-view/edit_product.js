@@ -286,7 +286,11 @@ export class EditProductView extends HTMLElement {
   };
 
   handleDocumentKeyDown(event) {
-    if (event.key === "Escape" && this.modal && !this.modal.classList.contains("hidden")) {
+    if (
+      event.key === "Escape" &&
+      this.modal &&
+      !this.modal.classList.contains("hidden")
+    ) {
       this.closeModal();
     }
   }
