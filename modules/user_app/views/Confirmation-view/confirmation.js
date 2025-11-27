@@ -54,6 +54,7 @@ class ConfirmationView extends HTMLElement {
     if (order && order.customer) {
       this.el('custName').textContent = 'Name: ' + (order.customer.name || '-');
       this.el('custEmail').textContent = 'Email: ' + (order.customer.email || '-');
+      this.el('custPhone').textContent = 'Phone: ' + (order.customer.phone || '-');
       this.el('custAddress').textContent = 'Address: ' + [order.customer.address, order.customer.city, order.customer.zip].filter(Boolean).join(', ') || '-';
     }
 

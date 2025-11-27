@@ -100,6 +100,14 @@ class CheckoutView extends HTMLElement {
   init() {
     this.$('#subtotal').textContent = this.format(0.00);
 
+    // Restrict phone input to numbers only
+    const phoneInput = this.$('#phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      });
+    }
+
     // Load shipping methods
     this.fetchShipping().then(methods => {
       this.$('#shippingLoading').style.display = 'none';
@@ -108,10 +116,12 @@ class CheckoutView extends HTMLElement {
 
     // Handle place order button click
     this.$('#placeOrderBtn').addEventListener('click', async (e) => {
+		
       const order = {
         customer: {
           name: this.$('#name').value,
           email: this.$('#email').value,
+		  phone: this.$('#phone').value,
           address: this.$('#address').value,
           city: this.$('#city').value,
           zip: this.$('#zip').value
@@ -127,6 +137,7 @@ class CheckoutView extends HTMLElement {
         alert('Please enter name and email.');
         return;
       }
+      
       if (!order.shipping.id) {
         alert('Please choose a shipping method.');
         return;
@@ -162,7 +173,7 @@ class CheckoutView extends HTMLElement {
         shipping_id: order.shipping.id,
         content: JSON.stringify(content),
         email: order.customer.email,
-        phone: ''
+        phone: order.customer.phone 
       };
 
       // Send order to API
